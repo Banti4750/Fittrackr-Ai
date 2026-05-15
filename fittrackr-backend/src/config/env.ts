@@ -19,6 +19,8 @@ export const env = {
   claudeModel: process.env.CLAUDE_MODEL ?? 'claude-sonnet-4-20250514',
   openaiApiKey: process.env.OPENAI_API_KEY ?? '',
   openaiModel: process.env.OPENAI_MODEL ?? 'gpt-4o',
+  geminiApiKey: process.env.GEMINI_API_KEY ?? '',
+  geminiModel: process.env.GEMINI_MODEL ?? 'gemini-2.0-flash',
   cloudinary: {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME ?? '',
     apiKey: process.env.CLOUDINARY_API_KEY ?? '',
@@ -26,6 +28,6 @@ export const env = {
   },
 };
 
-export const hasAI = () => Boolean(env.claudeApiKey || env.openaiApiKey);
+export const hasAI = () => Boolean(env.claudeApiKey || env.openaiApiKey || env.geminiApiKey);
 export const hasCloudinary = () =>
   Boolean(env.cloudinary.cloudName && env.cloudinary.apiKey && env.cloudinary.apiSecret);

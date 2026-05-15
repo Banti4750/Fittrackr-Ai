@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { env, hasAI } from '../config/env';
 import { WorkoutSession } from '../models/WorkoutSession';
 import { Exercise } from '../models/Exercise';
@@ -187,6 +188,17 @@ async function callOpenAI(prompt: string): Promise<string> {
   return resp.choices[0]?.message?.content ?? '';
 }
 
+async function callGemini(prompt: string): Promise<string> {
+  const client = new GoogleGenerativeAI(env.geminiApiKey);
+  const model = client.getGenerativeModel({
+    model: env.geminiModel,
+    generationConfig: { responseMimeType: 'application/json' },
+    systemInstruction: 'You are a certified personal trainer AI. Respond only with valid JSON.',
+  });
+  const resp = await model.generateContent(prompt);
+  return resp.response.text();
+}
+
 function safeParseJson(raw: string): Partial<InsightPayload> {
   const trimmed = raw.trim().replace(/^```json\s*|\s*```$/g, '').replace(/^```\s*|\s*```$/g, '');
   try {
@@ -253,7 +265,11 @@ export async function generateInsights(userId: string): Promise<IAIInsight> {
   if (hasAI()) {
     const prompt = buildPrompt(user.level, stats);
     try {
-      const raw = env.claudeApiKey ? await callClaude(prompt) : await callOpenAI(prompt);
+      const raw = env.geminiApiKey
+        ? await callGemini(prompt)
+        : env.claudeApiKey
+        ? await callClaude(prompt)
+        : await callOpenAI(prompt);
       const parsed = safeParseJson(raw);
       const fb = fallbackInsight(user.level, stats);
       payload = {
