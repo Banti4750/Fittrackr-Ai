@@ -40,3 +40,18 @@ export async function getMuscleBreakdown(range = '30d') {
   );
   return data.breakdown;
 }
+
+export interface MuscleHeatmapEntry {
+  muscle: string;
+  sets: number;
+  volume: number;
+  daysSinceLast: number | null;
+}
+
+export async function getMuscleHeatmap(range = '7d') {
+  const { data } = await api.get<{ heatmap: MuscleHeatmapEntry[]; rangeDays: number }>(
+    '/progress/muscle-heatmap',
+    { params: { range } }
+  );
+  return data;
+}

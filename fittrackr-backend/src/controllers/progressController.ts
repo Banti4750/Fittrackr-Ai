@@ -112,6 +112,83 @@ export const frequency = asyncHandler(async (req: AuthRequest, res: Response) =>
   res.json({ points, totalWorkouts: sessions.length });
 });
 
+export const muscleHeatmap = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = new mongoose.Types.ObjectId(req.userId!);
+  const days = rangeDays(req.query.range as string | undefined);
+  const since = new Date();
+  since.setDate(since.getDate() - days);
+
+  const recent = await WorkoutSession.aggregate([
+    { $match: { userId, date: { $gte: since } } },
+    { $unwind: '$exercises' },
+    {
+      $lookup: {
+        from: 'exercises',
+        localField: 'exercises.exerciseId',
+        foreignField: '_id',
+        as: 'ex',
+      },
+    },
+    { $unwind: '$ex' },
+    { $unwind: '$exercises.sets' },
+    {
+      $group: {
+        _id: '$ex.muscleGroup.primary',
+        sets: { $sum: 1 },
+        volume: {
+          $sum: {
+            $multiply: [
+              { $ifNull: ['$exercises.sets.reps', 0] },
+              { $ifNull: ['$exercises.sets.weight', 0] },
+            ],
+          },
+        },
+        lastTrained: { $max: '$date' },
+      },
+    },
+  ]);
+
+  const everPipeline = await WorkoutSession.aggregate([
+    { $match: { userId } },
+    { $unwind: '$exercises' },
+    {
+      $lookup: {
+        from: 'exercises',
+        localField: 'exercises.exerciseId',
+        foreignField: '_id',
+        as: 'ex',
+      },
+    },
+    { $unwind: '$ex' },
+    {
+      $group: {
+        _id: '$ex.muscleGroup.primary',
+        lastTrained: { $max: '$date' },
+      },
+    },
+  ]);
+
+  const everMap = new Map<string, Date>();
+  for (const r of everPipeline) everMap.set(r._id, r.lastTrained);
+
+  const now = Date.now();
+  const recentMap = new Map(recent.map((r) => [r._id, r]));
+  const muscles = new Set<string>([...everMap.keys(), ...recentMap.keys()]);
+
+  const heatmap = Array.from(muscles).map((muscle) => {
+    const r = recentMap.get(muscle);
+    const last = everMap.get(muscle);
+    return {
+      muscle,
+      sets: r?.sets ?? 0,
+      volume: Math.round(r?.volume ?? 0),
+      daysSinceLast: last ? Math.floor((now - new Date(last).getTime()) / (24 * 60 * 60 * 1000)) : null,
+    };
+  });
+
+  res.json({ heatmap, rangeDays: days });
+});
+
 export const muscleBreakdown = asyncHandler(async (req: AuthRequest, res: Response) => {
   const userId = new mongoose.Types.ObjectId(req.userId!);
   const days = rangeDays(req.query.range as string | undefined);

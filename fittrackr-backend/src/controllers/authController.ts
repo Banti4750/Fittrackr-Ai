@@ -6,6 +6,7 @@ import { User } from '../models/User';
 import { Streak } from '../models/Streak';
 import { signToken, AuthRequest } from '../middleware/auth';
 import { HttpError } from '../middleware/errorHandler';
+import { seedStarterTemplates } from '../services/starterTemplates';
 
 const registerSchema = z.object({
   name: z.string().min(1),
@@ -31,6 +32,11 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
     level: data.level ?? 'beginner',
   });
   await Streak.create({ userId: user._id });
+  try {
+    await seedStarterTemplates(user._id);
+  } catch (err) {
+    console.warn('[auth] starter templates seeding failed:', err);
+  }
   const token = signToken(user._id.toString());
   res.status(201).json({ user, token });
 });

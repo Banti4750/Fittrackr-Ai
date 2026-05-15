@@ -19,6 +19,16 @@ export async function createTemplate(input: CreateTemplateInput) {
   return data.template;
 }
 
+export async function updateTemplate(id: string, input: CreateTemplateInput) {
+  const { data } = await api.put<{ template: WorkoutTemplate }>(`/templates/${id}`, input);
+  return data.template;
+}
+
 export async function deleteTemplate(id: string) {
   await api.delete(`/templates/${id}`);
+}
+
+export async function installStarterTemplates() {
+  const { data } = await api.post<{ created: number }>('/templates/install-starters');
+  return data.created;
 }

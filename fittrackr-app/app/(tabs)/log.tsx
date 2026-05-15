@@ -6,7 +6,7 @@ import { Screen } from '../../src/components/Screen';
 import { Button } from '../../src/components/Button';
 import { useTheme } from '../../src/theme/useTheme';
 import { useWorkoutStore } from '../../src/stores/useWorkoutStore';
-import { deleteTemplate, listTemplates } from '../../src/api/templates';
+import { deleteTemplate, installStarterTemplates, listTemplates } from '../../src/api/templates';
 import { WorkoutTemplate } from '../../src/types';
 
 export default function Log() {
@@ -20,6 +20,20 @@ export default function Log() {
   const del = useMutation({
     mutationFn: deleteTemplate,
     onSuccess: () => qc.invalidateQueries({ queryKey: ['templates'] }),
+  });
+  const installStarters = useMutation({
+    mutationFn: installStarterTemplates,
+    onSuccess: (created) => {
+      qc.invalidateQueries({ queryKey: ['templates'] });
+      Alert.alert(
+        'Starter templates added',
+        created > 0
+          ? `Added ${created} starter template${created === 1 ? '' : 's'}.`
+          : 'You already have all starters.'
+      );
+    },
+    onError: (e: any) =>
+      Alert.alert('Install failed', e?.response?.data?.error ?? e?.message ?? 'Unknown error'),
   });
 
   const startTemplate = (t: WorkoutTemplate) => {
@@ -60,13 +74,19 @@ export default function Log() {
             padding: 16,
             borderWidth: 1,
             borderColor: colors.border,
+            gap: 12,
           }}
         >
           <Text style={{ color: colors.textMuted, lineHeight: 20 }}>
-            No templates yet. Build a workout, then tap{' '}
-            <Text style={{ color: colors.text, fontWeight: '700' }}>Save as template</Text> on the
-            active workout screen to reuse it next time.
+            No templates yet. Install our starter pack (Push/Pull/Legs, 5×5 Stronglifts, Upper/Lower)
+            or build one from an active workout via{' '}
+            <Text style={{ color: colors.text, fontWeight: '700' }}>Save as template</Text>.
           </Text>
+          <Button
+            title="Install starter templates"
+            onPress={() => installStarters.mutate()}
+            loading={installStarters.isPending}
+          />
         </View>
       ) : (
         <View style={{ gap: 10 }}>
@@ -79,24 +99,46 @@ export default function Log() {
                 padding: 14,
                 borderWidth: 1,
                 borderColor: colors.border,
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 12,
+                gap: 8,
               }}
             >
-              <View style={{ flex: 1 }}>
-                <Text style={{ color: colors.text, fontSize: 16, fontWeight: '700' }}>{t.name}</Text>
-                <Text style={{ color: colors.textMuted, fontSize: 12 }}>
-                  {t.exercises.length} exercise{t.exercises.length === 1 ? '' : 's'} ·{' '}
-                  {t.exercises.reduce((n, e) => n + e.sets.length, 0)} sets
-                </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                <View style={{ flex: 1 }}>
+                  <Text style={{ color: colors.text, fontSize: 16, fontWeight: '700' }}>
+                    {t.name}
+                  </Text>
+                  <Text style={{ color: colors.textMuted, fontSize: 12 }}>
+                    {t.exercises.length} exercise{t.exercises.length === 1 ? '' : 's'} ·{' '}
+                    {t.exercises.reduce((n, e) => n + e.sets.length, 0)} sets
+                  </Text>
+                </View>
+                <Pressable onPress={() => confirmDelete(t)} hitSlop={8}>
+                  <Text style={{ color: colors.danger, fontSize: 18, paddingHorizontal: 4 }}>×</Text>
+                </Pressable>
               </View>
-              <Pressable onPress={() => confirmDelete(t)} hitSlop={8}>
-                <Text style={{ color: colors.danger, fontSize: 18, paddingHorizontal: 4 }}>×</Text>
-              </Pressable>
-              <Button title="Start" variant="secondary" onPress={() => startTemplate(t)} />
+              <View style={{ flexDirection: 'row', gap: 8 }}>
+                <View style={{ flex: 1 }}>
+                  <Button
+                    title="Edit"
+                    variant="ghost"
+                    onPress={() => router.push(`/template/${t._id}` as any)}
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Button title="Start" variant="secondary" onPress={() => startTemplate(t)} />
+                </View>
+              </View>
             </View>
           ))}
+          <Pressable
+            onPress={() => installStarters.mutate()}
+            disabled={installStarters.isPending}
+            style={{ alignSelf: 'center', marginTop: 4, padding: 8 }}
+          >
+            <Text style={{ color: colors.primary, fontSize: 13, fontWeight: '600' }}>
+              {installStarters.isPending ? 'Installing…' : '+ Add starter templates'}
+            </Text>
+          </Pressable>
         </View>
       )}
     </Screen>

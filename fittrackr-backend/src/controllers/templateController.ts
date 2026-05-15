@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { WorkoutTemplate } from '../models/WorkoutTemplate';
 import { AuthRequest } from '../middleware/auth';
 import { HttpError } from '../middleware/errorHandler';
+import { seedStarterTemplates } from '../services/starterTemplates';
 
 const setSchema = z.object({
   reps: z.number().int().nonnegative().optional(),
@@ -43,8 +44,30 @@ export const create = asyncHandler(async (req: AuthRequest, res: Response) => {
   res.status(201).json({ template });
 });
 
+export const update = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const data = upsertSchema.parse(req.body);
+  const template = await WorkoutTemplate.findOneAndUpdate(
+    { _id: req.params.id, userId: req.userId },
+    {
+      name: data.name,
+      exercises: data.exercises.map((e) => ({
+        exerciseId: new mongoose.Types.ObjectId(e.exerciseId),
+        sets: e.sets,
+      })),
+    },
+    { new: true }
+  ).populate('exercises.exerciseId', 'name muscleGroup category difficulty');
+  if (!template) throw new HttpError(404, 'Template not found');
+  res.json({ template });
+});
+
 export const remove = asyncHandler(async (req: AuthRequest, res: Response) => {
   const result = await WorkoutTemplate.deleteOne({ _id: req.params.id, userId: req.userId });
   if (result.deletedCount === 0) throw new HttpError(404, 'Template not found');
   res.json({ ok: true });
+});
+
+export const installStarters = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const created = await seedStarterTemplates(req.userId!);
+  res.json({ created });
 });

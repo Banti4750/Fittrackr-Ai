@@ -5,11 +5,13 @@ import { useQuery } from '@tanstack/react-query';
 import { Screen } from '../../src/components/Screen';
 import { WorkoutCard } from '../../src/components/WorkoutCard';
 import { AIInsightCard } from '../../src/components/AIInsightCard';
+import { BodyHeatmap } from '../../src/components/BodyHeatmap';
 import { useTheme } from '../../src/theme/useTheme';
 import { useAuthStore } from '../../src/stores/useAuthStore';
 import { listWorkouts } from '../../src/api/workouts';
 import { latestInsights } from '../../src/api/ai';
 import { getStreak } from '../../src/api/streaks';
+import { getMuscleHeatmap } from '../../src/api/progress';
 import { greeting, formatVolume } from '../../src/utils/format';
 
 export default function Home() {
@@ -20,6 +22,7 @@ export default function Home() {
   const workouts = useQuery({ queryKey: ['workouts', 'home'], queryFn: () => listWorkouts({ page: 1 }) });
   const insights = useQuery({ queryKey: ['insights', 'latest'], queryFn: latestInsights });
   const streak = useQuery({ queryKey: ['streak'], queryFn: getStreak });
+  const heatmap = useQuery({ queryKey: ['muscle-heatmap', '7d'], queryFn: () => getMuscleHeatmap('7d') });
 
   const recent = workouts.data?.sessions?.slice(0, 3) ?? [];
   const weekSessions =
@@ -66,6 +69,10 @@ export default function Home() {
         </View>
         <Text style={{ fontSize: 32 }}>➕</Text>
       </Pressable>
+
+      {heatmap.data && heatmap.data.heatmap.length > 0 ? (
+        <BodyHeatmap data={heatmap.data.heatmap} rangeDays={heatmap.data.rangeDays} />
+      ) : null}
 
       {topInsight ? (
         <Pressable onPress={() => router.push('/insights')}>
