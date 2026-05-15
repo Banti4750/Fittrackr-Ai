@@ -1,43 +1,41 @@
-export const lightColors = {
-  bg: '#f8fafc',
-  card: '#ffffff',
-  border: '#e2e8f0',
-  text: '#0f172a',
-  textMuted: '#64748b',
-  primary: '#6366f1',
-  primaryMuted: '#e0e7ff',
-  success: '#16a34a',
-  successMuted: '#dcfce7',
-  warn: '#f59e0b',
-  warnMuted: '#fef3c7',
-  danger: '#dc2626',
-  dangerMuted: '#fee2e2',
-  flame: '#ff6b35',
-  chartLine: '#6366f1',
-  beginner: '#22c55e',
-  intermediate: '#3b82f6',
-  elite: '#ef4444',
+// FitTrackr brand palette — matches the landing page.
+// Single dark theme (lime + fire on near-black). Both `light` and `dark`
+// resolve to the same values so the app looks identical regardless of
+// the system color scheme.
+
+const palette = {
+  bg: '#0A0A0A',
+  card: '#111111',
+  surface2: '#1A1A1A',
+  border: '#2A2A2A',
+  text: '#FFFFFF',
+  textMuted: '#888888',
+
+  primary: '#C8FF00',
+  primaryMuted: '#1F2900',
+  onPrimary: '#000000',
+
+  accentOrange: '#FF5C00',
+  accentOrangeMuted: '#2A1300',
+
+  success: '#C8FF00',
+  successMuted: '#1F2900',
+  warn: '#FF5C00',
+  warnMuted: '#2A1300',
+  danger: '#FF4D4D',
+  dangerMuted: '#2D0A0A',
+  flame: '#FF5C00',
+  chartLine: '#C8FF00',
+
+  beginner: '#4ADE80',
+  beginnerMuted: '#0E2E18',
+  intermediate: '#60A5FA',
+  intermediateMuted: '#0E1E3A',
+  elite: '#FF8A3D',
+  eliteMuted: '#2A1300',
 };
 
-export const darkColors: typeof lightColors = {
-  bg: '#0b1220',
-  card: '#111827',
-  border: '#1f2937',
-  text: '#f1f5f9',
-  textMuted: '#94a3b8',
-  primary: '#818cf8',
-  primaryMuted: '#1e1b4b',
-  success: '#4ade80',
-  successMuted: '#052e16',
-  warn: '#fbbf24',
-  warnMuted: '#451a03',
-  danger: '#f87171',
-  dangerMuted: '#450a0a',
-  flame: '#ff7e3a',
-  chartLine: '#818cf8',
-  beginner: '#4ade80',
-  intermediate: '#60a5fa',
-  elite: '#f87171',
-};
+export const lightColors = palette;
+export const darkColors: typeof lightColors = palette;
 
 export type Palette = typeof lightColors;

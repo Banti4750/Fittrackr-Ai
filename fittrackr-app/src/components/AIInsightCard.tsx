@@ -27,13 +27,23 @@ export function AIInsightCard({ insight }: { insight: AIInsight }) {
         borderRadius: 14,
         padding: 14,
         borderWidth: 1,
-        borderColor: colors.border,
+        borderColor: 'rgba(255,92,0,0.25)',
         gap: 6,
       }}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
         <Text style={{ fontSize: 20 }}>{iconMap[insight.type]}</Text>
-        <Text style={{ color: colors.primary, fontWeight: '700' }}>{labelMap[insight.type]}</Text>
+        <Text
+          style={{
+            color: colors.accentOrange,
+            fontWeight: '800',
+            letterSpacing: 0.6,
+            textTransform: 'uppercase',
+            fontSize: 12,
+          }}
+        >
+          {labelMap[insight.type]}
+        </Text>
       </View>
       <Text style={{ color: colors.text }}>{insight.content}</Text>
       <Text style={{ color: colors.textMuted, fontSize: 11 }}>

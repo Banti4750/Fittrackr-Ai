@@ -6,16 +6,18 @@ import { useTheme } from '../theme/useTheme';
 export function LevelBadge({ level }: { level: Level }) {
   const { colors } = useTheme();
   const map = {
-    beginner: { bg: colors.successMuted, fg: colors.beginner, label: 'Beginner' },
-    intermediate: { bg: colors.primaryMuted, fg: colors.intermediate, label: 'Intermediate' },
-    elite: { bg: colors.dangerMuted, fg: colors.elite, label: 'Elite' },
+    beginner: { bg: colors.beginnerMuted, fg: colors.beginner, label: 'Beginner' },
+    intermediate: { bg: colors.intermediateMuted, fg: colors.intermediate, label: 'Intermediate' },
+    elite: { bg: colors.eliteMuted, fg: colors.elite, label: 'Elite' },
   } as const;
   const it = map[level];
   return (
     <View
       style={{
         backgroundColor: it.bg,
-        paddingHorizontal: 8,
+        borderColor: it.fg,
+        borderWidth: 1,
+        paddingHorizontal: 10,
         paddingVertical: 3,
         borderRadius: 999,
         alignSelf: 'flex-start',

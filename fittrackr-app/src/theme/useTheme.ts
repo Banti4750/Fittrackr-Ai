@@ -1,8 +1,6 @@
-import { useColorScheme } from 'react-native';
-import { lightColors, darkColors, Palette } from './colors';
+import { darkColors, Palette } from './colors';
 
+// FitTrackr is a dark-only brand — both light/dark resolve to the same palette.
 export function useTheme(): { colors: Palette; isDark: boolean } {
-  const scheme = useColorScheme();
-  const isDark = scheme === 'dark';
-  return { colors: isDark ? darkColors : lightColors, isDark };
+  return { colors: darkColors, isDark: true };
 }

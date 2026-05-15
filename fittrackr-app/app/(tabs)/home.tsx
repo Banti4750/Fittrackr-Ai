@@ -64,8 +64,10 @@ export default function Home() {
         }}
       >
         <View>
-          <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>Start a workout</Text>
-          <Text style={{ color: '#e0e7ff', marginTop: 2 }}>Tap to log sets, reps, weight</Text>
+          <Text style={{ color: colors.onPrimary, fontSize: 16, fontWeight: '800' }}>Start a workout</Text>
+          <Text style={{ color: 'rgba(0,0,0,0.7)', marginTop: 2, fontWeight: '500' }}>
+            Tap to log sets, reps, weight
+          </Text>
         </View>
         <Text style={{ fontSize: 32 }}>➕</Text>
       </Pressable>

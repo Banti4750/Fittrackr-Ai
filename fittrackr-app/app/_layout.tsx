@@ -4,9 +4,9 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useColorScheme } from 'react-native';
 import { useAuthStore } from '../src/stores/useAuthStore';
 import { setupNotifications } from '../src/utils/notifications';
+import { darkColors } from '../src/theme/colors';
 
 setupNotifications();
 
@@ -35,24 +35,36 @@ function AuthGate({ children }: { children: React.ReactNode }) {
 }
 
 export default function RootLayout() {
-  const scheme = useColorScheme();
+  const headerScreenOptions = {
+    headerShown: true as const,
+    headerStyle: { backgroundColor: darkColors.bg },
+    headerTintColor: darkColors.text,
+    headerTitleStyle: { color: darkColors.text, fontWeight: '700' as const },
+    headerShadowVisible: false,
+    contentStyle: { backgroundColor: darkColors.bg },
+  };
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: darkColors.bg }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
           <AuthGate>
-            <Stack screenOptions={{ headerShown: false }}>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: darkColors.bg },
+              }}
+            >
               <Stack.Screen name="(auth)" />
               <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="insights" options={{ headerShown: true, title: 'AI Insights' }} />
-              <Stack.Screen name="bodystats" options={{ headerShown: true, title: 'Body Stats' }} />
-              <Stack.Screen name="streaks" options={{ headerShown: true, title: 'Streaks' }} />
-              <Stack.Screen name="workout/active" options={{ headerShown: true, title: 'Active Workout' }} />
-              <Stack.Screen name="workout/[id]" options={{ headerShown: true, title: 'Workout' }} />
-              <Stack.Screen name="exercise/[id]" options={{ headerShown: true, title: 'Exercise' }} />
+              <Stack.Screen name="insights" options={{ ...headerScreenOptions, title: 'AI Insights' }} />
+              <Stack.Screen name="bodystats" options={{ ...headerScreenOptions, title: 'Body Stats' }} />
+              <Stack.Screen name="streaks" options={{ ...headerScreenOptions, title: 'Streaks' }} />
+              <Stack.Screen name="workout/active" options={{ ...headerScreenOptions, title: 'Active Workout' }} />
+              <Stack.Screen name="workout/[id]" options={{ ...headerScreenOptions, title: 'Workout' }} />
+              <Stack.Screen name="exercise/[id]" options={{ ...headerScreenOptions, title: 'Exercise' }} />
             </Stack>
           </AuthGate>
-          <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+          <StatusBar style="light" />
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

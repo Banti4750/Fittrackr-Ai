@@ -92,7 +92,7 @@ export function SetRow({ index, set, previous, onChange, onRemove, onComplete }:
             borderRadius: 8,
           }}
         >
-          <Text style={{ color: '#fff', fontWeight: '700' }}>✓</Text>
+          <Text style={{ color: colors.onPrimary, fontWeight: '700' }}>✓</Text>
         </Pressable>
       )}
       <Pressable onPress={onRemove} style={{ padding: 6 }}>

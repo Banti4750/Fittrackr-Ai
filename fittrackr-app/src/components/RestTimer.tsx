@@ -60,7 +60,7 @@ export function RestTimer({ initialSeconds = 60, active, onComplete }: Props) {
         onPress={onComplete}
         style={{ backgroundColor: colors.primary, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 999 }}
       >
-        <Text style={{ color: '#fff', fontWeight: '700' }}>Skip</Text>
+        <Text style={{ color: colors.onPrimary, fontWeight: '700' }}>Skip</Text>
       </Pressable>
     </View>
   );

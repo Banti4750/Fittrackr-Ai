@@ -14,9 +14,9 @@ interface Props {
 export function Button({ title, onPress, variant = 'primary', loading, disabled, style }: Props) {
   const { colors } = useTheme();
   const styles: Record<string, { bg: string; fg: string; border: string }> = {
-    primary: { bg: colors.primary, fg: '#ffffff', border: colors.primary },
+    primary: { bg: colors.primary, fg: colors.onPrimary, border: colors.primary },
     secondary: { bg: colors.card, fg: colors.primary, border: colors.primary },
-    ghost: { bg: 'transparent', fg: colors.primary, border: 'transparent' },
+    ghost: { bg: 'transparent', fg: colors.text, border: 'transparent' },
     danger: { bg: colors.danger, fg: '#ffffff', border: colors.danger },
   };
   const s = styles[variant];
@@ -29,9 +29,9 @@ export function Button({ title, onPress, variant = 'primary', loading, disabled,
           backgroundColor: s.bg,
           borderColor: s.border,
           borderWidth: 1,
-          borderRadius: 12,
+          borderRadius: 999,
           paddingVertical: 14,
-          paddingHorizontal: 16,
+          paddingHorizontal: 20,
           alignItems: 'center',
           opacity: disabled ? 0.5 : pressed ? 0.85 : 1,
         },
