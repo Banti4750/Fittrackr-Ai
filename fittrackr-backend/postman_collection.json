@@ -1,0 +1,150 @@
+{
+  "info": {
+    "name": "FitTrackr API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "All FitTrackr API endpoints. Set `baseUrl` and `token` collection variables."
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api" },
+    { "key": "token", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alex\",\n  \"email\": \"alex@example.com\",\n  \"password\": \"secret123\",\n  \"level\": \"beginner\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alex@example.com\",\n  \"password\": \"secret123\"\n}"
+            },
+            "url": "{{baseUrl}}/auth/login"
+          }
+        },
+        { "name": "Me", "request": { "method": "GET", "url": "{{baseUrl}}/auth/me" } }
+      ]
+    },
+    {
+      "name": "Exercises",
+      "item": [
+        { "name": "List", "request": { "method": "GET", "url": "{{baseUrl}}/exercises?muscle=chest&level=beginner" } },
+        { "name": "Get one", "request": { "method": "GET", "url": "{{baseUrl}}/exercises/:id" } }
+      ]
+    },
+    {
+      "name": "Workouts",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Push Day\",\n  \"exercises\": [\n    {\n      \"exerciseId\": \"REPLACE\",\n      \"sets\": [\n        { \"weight\": 60, \"reps\": 8, \"restSeconds\": 90 },\n        { \"weight\": 60, \"reps\": 8 }\n      ]\n    }\n  ],\n  \"mood\": \"great\"\n}"
+            },
+            "url": "{{baseUrl}}/workouts"
+          }
+        },
+        { "name": "List", "request": { "method": "GET", "url": "{{baseUrl}}/workouts" } },
+        { "name": "Get", "request": { "method": "GET", "url": "{{baseUrl}}/workouts/:id" } },
+        { "name": "Delete", "request": { "method": "DELETE", "url": "{{baseUrl}}/workouts/:id" } }
+      ]
+    },
+    {
+      "name": "Progress",
+      "item": [
+        { "name": "Volume", "request": { "method": "GET", "url": "{{baseUrl}}/progress/volume?range=30d" } },
+        { "name": "Personal bests", "request": { "method": "GET", "url": "{{baseUrl}}/progress/personal-bests" } },
+        { "name": "Frequency", "request": { "method": "GET", "url": "{{baseUrl}}/progress/frequency?range=90d" } },
+        { "name": "Muscle breakdown", "request": { "method": "GET", "url": "{{baseUrl}}/progress/muscle-breakdown" } }
+      ]
+    },
+    {
+      "name": "Body Stats",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"weight\": 80,\n  \"bodyFat\": 14.5,\n  \"measurements\": { \"chest\": 102, \"waist\": 86 }\n}"
+            },
+            "url": "{{baseUrl}}/bodystats"
+          }
+        },
+        { "name": "List", "request": { "method": "GET", "url": "{{baseUrl}}/bodystats" } },
+        { "name": "Trend", "request": { "method": "GET", "url": "{{baseUrl}}/bodystats/trend" } }
+      ]
+    },
+    {
+      "name": "Streaks",
+      "item": [{ "name": "Get", "request": { "method": "GET", "url": "{{baseUrl}}/streaks" } }]
+    },
+    {
+      "name": "Users",
+      "item": [
+        { "name": "Profile", "request": { "method": "GET", "url": "{{baseUrl}}/users/profile" } },
+        {
+          "name": "Update profile",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"weight\": 80,\n  \"height\": 180\n}" },
+            "url": "{{baseUrl}}/users/profile"
+          }
+        },
+        {
+          "name": "Update level",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"level\": \"intermediate\"\n}" },
+            "url": "{{baseUrl}}/users/level"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI",
+      "item": [
+        { "name": "Generate insights", "request": { "method": "POST", "url": "{{baseUrl}}/ai/insights" } },
+        { "name": "Latest insights", "request": { "method": "GET", "url": "{{baseUrl}}/ai/insights/latest" } }
+      ]
+    },
+    {
+      "name": "Upload",
+      "item": [
+        {
+          "name": "Photo (multipart)",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "formdata", "formdata": [{ "key": "file", "type": "file" }] },
+            "url": "{{baseUrl}}/upload/photo"
+          }
+        }
+      ]
+    }
+  ]
+}

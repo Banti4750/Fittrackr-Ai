@@ -1,0 +1,43 @@
+export const lightColors = {
+  bg: '#f8fafc',
+  card: '#ffffff',
+  border: '#e2e8f0',
+  text: '#0f172a',
+  textMuted: '#64748b',
+  primary: '#6366f1',
+  primaryMuted: '#e0e7ff',
+  success: '#16a34a',
+  successMuted: '#dcfce7',
+  warn: '#f59e0b',
+  warnMuted: '#fef3c7',
+  danger: '#dc2626',
+  dangerMuted: '#fee2e2',
+  flame: '#ff6b35',
+  chartLine: '#6366f1',
+  beginner: '#22c55e',
+  intermediate: '#3b82f6',
+  elite: '#ef4444',
+};
+
+export const darkColors: typeof lightColors = {
+  bg: '#0b1220',
+  card: '#111827',
+  border: '#1f2937',
+  text: '#f1f5f9',
+  textMuted: '#94a3b8',
+  primary: '#818cf8',
+  primaryMuted: '#1e1b4b',
+  success: '#4ade80',
+  successMuted: '#052e16',
+  warn: '#fbbf24',
+  warnMuted: '#451a03',
+  danger: '#f87171',
+  dangerMuted: '#450a0a',
+  flame: '#ff7e3a',
+  chartLine: '#818cf8',
+  beginner: '#4ade80',
+  intermediate: '#60a5fa',
+  elite: '#f87171',
+};
+
+export type Palette = typeof lightColors;
