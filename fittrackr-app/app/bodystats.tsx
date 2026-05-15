@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Alert, Image, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { Alert, Image, Modal, Pressable, ScrollView, Text, TextInput, View, useWindowDimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Screen } from '../src/components/Screen';
@@ -11,6 +11,7 @@ import { useTheme } from '../src/theme/useTheme';
 import { createBodyStats, getBodyStatsTrend, listBodyStats } from '../src/api/bodystats';
 import { api } from '../src/api/client';
 import { formatDate } from '../src/utils/format';
+import { BodyStatsEntry } from '../src/types';
 
 export default function BodyStatsScreen() {
   const { colors } = useTheme();
@@ -75,6 +76,21 @@ export default function BodyStatsScreen() {
   const previous = list.data?.[1];
   const latestPhoto = latest?.photos?.[0];
   const previousPhoto = previous?.photos?.[0];
+
+  const photoTimeline = useMemo(() => {
+    const entries = list.data ?? [];
+    const flat: Array<{ uri: string; entry: BodyStatsEntry; photoIndex: number }> = [];
+    for (const entry of entries) {
+      (entry.photos ?? []).forEach((uri, photoIndex) => {
+        flat.push({ uri, entry, photoIndex });
+      });
+    }
+    return flat.sort(
+      (a, b) => new Date(a.entry.date).getTime() - new Date(b.entry.date).getTime()
+    );
+  }, [list.data]);
+
+  const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
   const weightTrendDir =
     trend.data && trend.data.length >= 2 && trend.data[trend.data.length - 1].weight && trend.data[0].weight
@@ -160,6 +176,58 @@ export default function BodyStatsScreen() {
         />
       </View>
 
+      {photoTimeline.length > 0 ? (
+        <View
+          style={{
+            backgroundColor: colors.card,
+            padding: 14,
+            borderRadius: 14,
+            borderWidth: 1,
+            borderColor: colors.border,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
+            <Text style={{ color: colors.text, fontWeight: '700' }}>Progress photos</Text>
+            <Text style={{ color: colors.textMuted, fontSize: 12 }}>
+              {photoTimeline.length} photo{photoTimeline.length === 1 ? '' : 's'}
+            </Text>
+          </View>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 10 }}>
+            {photoTimeline.map((p, i) => (
+              <Pressable key={`${p.entry._id}-${p.photoIndex}`} onPress={() => setViewerIndex(i)}>
+                <Image
+                  source={{ uri: p.uri }}
+                  style={{
+                    width: 90,
+                    height: 120,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    borderColor: colors.border,
+                  }}
+                />
+                <Text
+                  style={{
+                    color: colors.textMuted,
+                    fontSize: 11,
+                    marginTop: 4,
+                    textAlign: 'center',
+                  }}
+                >
+                  {formatDate(p.entry.date)}
+                </Text>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+      ) : null}
+
       {latestPhoto && previousPhoto ? (
         <View
           style={{
@@ -177,7 +245,142 @@ export default function BodyStatsScreen() {
           />
         </View>
       ) : null}
+
+      <PhotoViewer
+        photos={photoTimeline}
+        index={viewerIndex}
+        onClose={() => setViewerIndex(null)}
+        onChange={setViewerIndex}
+      />
     </Screen>
+  );
+}
+
+function PhotoViewer({
+  photos,
+  index,
+  onClose,
+  onChange,
+}: {
+  photos: Array<{ uri: string; entry: BodyStatsEntry; photoIndex: number }>;
+  index: number | null;
+  onClose: () => void;
+  onChange: (i: number) => void;
+}) {
+  const { colors } = useTheme();
+  const { width, height } = useWindowDimensions();
+  if (index == null) return null;
+  const current = photos[index];
+  if (!current) return null;
+  const { entry } = current;
+  const m = entry.measurements ?? {};
+  const stats: Array<[string, string]> = [];
+  if (entry.weight != null) stats.push(['Weight', `${entry.weight} kg`]);
+  if (entry.bmi != null) stats.push(['BMI', `${entry.bmi}`]);
+  if (entry.bodyFat != null) stats.push(['Body fat', `${entry.bodyFat}%`]);
+  if (m.chest != null) stats.push(['Chest', `${m.chest} cm`]);
+  if (m.waist != null) stats.push(['Waist', `${m.waist} cm`]);
+  if (m.hips != null) stats.push(['Hips', `${m.hips} cm`]);
+  if (m.bicep != null) stats.push(['Bicep', `${m.bicep} cm`]);
+  if (m.thigh != null) stats.push(['Thigh', `${m.thigh} cm`]);
+
+  const prev = index > 0 ? () => onChange(index - 1) : null;
+  const next = index < photos.length - 1 ? () => onChange(index + 1) : null;
+
+  return (
+    <Modal visible animationType="fade" transparent onRequestClose={onClose}>
+      <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.92)' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 16,
+            paddingTop: 48,
+            paddingBottom: 8,
+          }}
+        >
+          <View>
+            <Text style={{ color: '#fff', fontSize: 16, fontWeight: '700' }}>
+              {formatDate(entry.date)}
+            </Text>
+            <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12 }}>
+              {index + 1} of {photos.length}
+            </Text>
+          </View>
+          <Pressable onPress={onClose} hitSlop={12}>
+            <Text style={{ color: '#fff', fontSize: 18, fontWeight: '700' }}>Close</Text>
+          </Pressable>
+        </View>
+
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Image
+            source={{ uri: current.uri }}
+            style={{ width: width - 32, height: height * 0.6, borderRadius: 12 }}
+            resizeMode="contain"
+          />
+          {prev ? (
+            <Pressable
+              onPress={prev}
+              hitSlop={16}
+              style={{
+                position: 'absolute',
+                left: 8,
+                padding: 12,
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                borderRadius: 999,
+              }}
+            >
+              <Text style={{ color: '#fff', fontSize: 22, fontWeight: '800' }}>‹</Text>
+            </Pressable>
+          ) : null}
+          {next ? (
+            <Pressable
+              onPress={next}
+              hitSlop={16}
+              style={{
+                position: 'absolute',
+                right: 8,
+                padding: 12,
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                borderRadius: 999,
+              }}
+            >
+              <Text style={{ color: '#fff', fontSize: 22, fontWeight: '800' }}>›</Text>
+            </Pressable>
+          ) : null}
+        </View>
+
+        {stats.length > 0 ? (
+          <View
+            style={{
+              padding: 16,
+              backgroundColor: colors.card,
+              margin: 16,
+              borderRadius: 14,
+              borderWidth: 1,
+              borderColor: colors.border,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              gap: 12,
+            }}
+          >
+            {stats.map(([label, value]) => (
+              <View key={label} style={{ minWidth: 80 }}>
+                <Text style={{ color: colors.textMuted, fontSize: 11 }}>{label}</Text>
+                <Text style={{ color: colors.text, fontWeight: '700', fontSize: 15 }}>{value}</Text>
+              </View>
+            ))}
+          </View>
+        ) : (
+          <View style={{ padding: 16 }}>
+            <Text style={{ color: 'rgba(255,255,255,0.6)', textAlign: 'center' }}>
+              No measurements logged for this entry
+            </Text>
+          </View>
+        )}
+      </View>
+    </Modal>
   );
 }
 

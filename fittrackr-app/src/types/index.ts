@@ -64,6 +64,17 @@ export interface WorkoutSession {
   createdAt: string;
 }
 
+export interface WorkoutTemplate {
+  _id: string;
+  name: string;
+  exercises: Array<{
+    exerciseId: Exercise | string;
+    sets: Array<{ reps?: number; weight?: number; duration?: number; restSeconds?: number }>;
+  }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface BodyStatsEntry {
   _id: string;
   date: string;

@@ -8,6 +8,7 @@ import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/authRoutes';
 import exerciseRoutes from './routes/exerciseRoutes';
 import workoutRoutes from './routes/workoutRoutes';
+import templateRoutes from './routes/templateRoutes';
 import progressRoutes from './routes/progressRoutes';
 import bodyStatsRoutes from './routes/bodyStatsRoutes';
 import streakRoutes from './routes/streakRoutes';
@@ -41,6 +42,7 @@ export function createApp(): Application {
   app.use('/api/auth', authRoutes);
   app.use('/api/exercises', exerciseRoutes);
   app.use('/api/workouts', workoutRoutes);
+  app.use('/api/templates', templateRoutes);
   app.use('/api/progress', progressRoutes);
   app.use('/api/bodystats', bodyStatsRoutes);
   app.use('/api/streaks', streakRoutes);

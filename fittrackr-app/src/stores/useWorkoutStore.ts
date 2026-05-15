@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Exercise, Mood, WorkoutSet } from '../types';
+import { Exercise, Mood, WorkoutSet, WorkoutTemplate } from '../types';
 
 export interface ActiveExercise {
   exercise: Exercise;
@@ -25,6 +25,8 @@ interface WorkoutState {
   addSet: (exerciseId: string, set?: WorkoutSet) => void;
   updateSet: (exerciseId: string, index: number, set: Partial<WorkoutSet>) => void;
   removeSet: (exerciseId: string, index: number) => void;
+
+  loadFromTemplate: (template: WorkoutTemplate) => void;
 }
 
 export const useWorkoutStore = create<WorkoutState>((set, get) => ({
@@ -78,4 +80,28 @@ export const useWorkoutStore = create<WorkoutState>((set, get) => ({
           : x
       ),
     }),
+
+  loadFromTemplate: (template) => {
+    const exercises: ActiveExercise[] = [];
+    for (const te of template.exercises) {
+      const ex = te.exerciseId;
+      if (typeof ex === 'string' || !ex || !('_id' in ex)) continue;
+      const sets: WorkoutSet[] = te.sets.length
+        ? te.sets.map((s) => ({
+            reps: s.reps,
+            weight: s.weight,
+            duration: s.duration,
+            restSeconds: s.restSeconds,
+          }))
+        : [{ reps: undefined, weight: undefined }];
+      exercises.push({ exercise: ex, sets });
+    }
+    set({
+      startedAt: Date.now(),
+      title: template.name,
+      exercises,
+      mood: undefined,
+      notes: '',
+    });
+  },
 }));

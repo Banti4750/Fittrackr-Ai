@@ -131,3 +131,45 @@ export const remove = asyncHandler(async (req: AuthRequest, res: Response) => {
   if (result.deletedCount === 0) throw new HttpError(404, 'Workout not found');
   res.json({ ok: true });
 });
+
+export const lastPerformed = asyncHandler(async (req: AuthRequest, res: Response) => {
+  const userId = new mongoose.Types.ObjectId(req.userId!);
+  const rows: Array<{ _id: mongoose.Types.ObjectId; date: Date; sets: any[] }> =
+    await WorkoutSession.aggregate([
+      { $match: { userId } },
+      { $unwind: '$exercises' },
+      { $sort: { date: -1 } },
+      {
+        $group: {
+          _id: '$exercises.exerciseId',
+          date: { $first: '$date' },
+          sets: { $first: '$exercises.sets' },
+        },
+      },
+    ]);
+
+  const now = Date.now();
+  const history: Record<
+    string,
+    { date: string; daysAgo: number; bestSet?: { weight?: number; reps?: number; duration?: number }; setCount: number }
+  > = {};
+  for (const r of rows) {
+    let best: any = undefined;
+    let bestVal = -1;
+    for (const s of r.sets ?? []) {
+      const v = bestSetValue(s);
+      if (v > bestVal) {
+        bestVal = v;
+        best = s;
+      }
+    }
+    history[r._id.toString()] = {
+      date: r.date.toISOString(),
+      daysAgo: Math.max(0, Math.floor((now - r.date.getTime()) / (24 * 60 * 60 * 1000))),
+      bestSet: best ? { weight: best.weight, reps: best.reps, duration: best.duration } : undefined,
+      setCount: r.sets?.length ?? 0,
+    };
+  }
+
+  res.json({ history });
+});

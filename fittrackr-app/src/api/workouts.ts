@@ -37,3 +37,17 @@ export async function getWorkout(id: string) {
 export async function deleteWorkout(id: string) {
   await api.delete(`/workouts/${id}`);
 }
+
+export interface LastPerformedEntry {
+  date: string;
+  daysAgo: number;
+  setCount: number;
+  bestSet?: { weight?: number; reps?: number; duration?: number };
+}
+
+export async function getLastPerformed() {
+  const { data } = await api.get<{ history: Record<string, LastPerformedEntry> }>(
+    '/workouts/last-performed'
+  );
+  return data.history;
+}
