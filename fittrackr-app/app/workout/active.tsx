@@ -364,7 +364,7 @@ function ExercisePicker({
             );
           })}
         </ScrollView>
-        <ScrollView keyboardShouldPersistTaps="handled">
+        <ScrollView keyboardShouldPersistTaps="handled" style={{flex:1}}>
           {q.isLoading ? (
             <Text style={{ color: colors.textMuted }}>Loading…</Text>
           ) : (q.data ?? []).length ? (
