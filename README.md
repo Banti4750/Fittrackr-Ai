@@ -2,7 +2,9 @@
 
 An AI-powered fitness tracking app. Log workouts, track personal records, see progress charts, get coaching insights from Claude.
 
-🌐 Live Demo: https://staging.d3ul7t1mvo87vv.amplifyapp.com/
+🌐 Visit Page: https://staging.d3ul7t1mvo87vv.amplifyapp.com/
+
+🌐 Download App: https://expo.dev/accounts/bantik4750/projects/fittrackr/builds/dbd84479-9727-4466-b9aa-3101f3068114
 
 ```
 /fittrackr-backend     Node.js + Express + MongoDB + Mongoose + JWT
@@ -52,48 +54,48 @@ npm run dev        # starts on http://localhost:5000
 
 ### Environment
 
-| Variable                  | Required | Notes                                        |
-| ------------------------- | -------- | -------------------------------------------- |
-| `PORT`                    | no       | defaults to 5000                             |
-| `MONGODB_URI`             | yes      | e.g. `mongodb://127.0.0.1:27017/fittrackr`   |
-| `JWT_SECRET`              | yes      | long random string                           |
-| `JWT_EXPIRES_IN`          | no       | default `30d`                                |
-| `CLAUDE_API_KEY`          | no       | Claude is preferred when set                 |
-| `CLAUDE_MODEL`            | no       | default `claude-sonnet-4-20250514`           |
-| `OPENAI_API_KEY`          | no       | fallback provider                            |
-| `OPENAI_MODEL`            | no       | default `gpt-4o`                             |
-| `CLOUDINARY_CLOUD_NAME`   | no\*     | required if you use photo upload             |
-| `CLOUDINARY_API_KEY`      | no\*     | "                                            |
-| `CLOUDINARY_API_SECRET`   | no\*     | "                                            |
+| Variable                | Required | Notes                                      |
+| ----------------------- | -------- | ------------------------------------------ |
+| `PORT`                  | no       | defaults to 5000                           |
+| `MONGODB_URI`           | yes      | e.g. `mongodb://127.0.0.1:27017/fittrackr` |
+| `JWT_SECRET`            | yes      | long random string                         |
+| `JWT_EXPIRES_IN`        | no       | default `30d`                              |
+| `CLAUDE_API_KEY`        | no       | Claude is preferred when set               |
+| `CLAUDE_MODEL`          | no       | default `claude-sonnet-4-20250514`         |
+| `OPENAI_API_KEY`        | no       | fallback provider                          |
+| `OPENAI_MODEL`          | no       | default `gpt-4o`                           |
+| `CLOUDINARY_CLOUD_NAME` | no\*     | required if you use photo upload           |
+| `CLOUDINARY_API_KEY`    | no\*     | "                                          |
+| `CLOUDINARY_API_SECRET` | no\*     | "                                          |
 
 ### API reference
 
-| Method | Path                              | Auth | Description                                |
-| ------ | --------------------------------- | ---- | ------------------------------------------ |
-| POST   | `/api/auth/register`              | —    | Create account, returns `{user, token}`    |
-| POST   | `/api/auth/login`                 | —    | Returns `{user, token}`                    |
-| GET    | `/api/auth/me`                    | yes  | Current user                               |
-| GET    | `/api/exercises`                  | —    | `?muscle=&category=&level=&search=`        |
-| GET    | `/api/exercises/:id`              | —    | Exercise detail                            |
-| POST   | `/api/workouts`                   | yes  | Create session (auto-detects PRs)          |
-| GET    | `/api/workouts`                   | yes  | `?startDate=&endDate=&page=&limit=`        |
-| GET    | `/api/workouts/:id`               | yes  | Workout detail                             |
-| PUT    | `/api/workouts/:id`               | yes  | Update                                     |
-| DELETE | `/api/workouts/:id`               | yes  | Delete                                     |
-| GET    | `/api/progress/volume`            | yes  | `?exercise=&range=7d|30d|90d`              |
-| GET    | `/api/progress/personal-bests`    | yes  | List of PRs per exercise                   |
-| GET    | `/api/progress/frequency`         | yes  | Workouts per week                          |
-| GET    | `/api/progress/muscle-breakdown`  | yes  | Sets per muscle group                      |
-| POST   | `/api/bodystats`                  | yes  | Create entry                               |
-| GET    | `/api/bodystats`                  | yes  | Last 30                                    |
-| GET    | `/api/bodystats/trend`            | yes  | Time series                                |
-| GET    | `/api/streaks`                    | yes  | Streak + 90-day heatmap                    |
-| GET    | `/api/users/profile`              | yes  | Profile                                    |
-| PUT    | `/api/users/profile`              | yes  | Update                                     |
-| PUT    | `/api/users/level`                | yes  | Set level                                  |
-| POST   | `/api/ai/insights`                | yes  | Generate fresh insights (AI call)          |
-| GET    | `/api/ai/insights/latest`         | yes  | Recent insights                            |
-| POST   | `/api/upload/photo`               | yes  | multipart `file` — returns Cloudinary URL  |
+| Method | Path                             | Auth | Description                               |
+| ------ | -------------------------------- | ---- | ----------------------------------------- | --- | ---- |
+| POST   | `/api/auth/register`             | —    | Create account, returns `{user, token}`   |
+| POST   | `/api/auth/login`                | —    | Returns `{user, token}`                   |
+| GET    | `/api/auth/me`                   | yes  | Current user                              |
+| GET    | `/api/exercises`                 | —    | `?muscle=&category=&level=&search=`       |
+| GET    | `/api/exercises/:id`             | —    | Exercise detail                           |
+| POST   | `/api/workouts`                  | yes  | Create session (auto-detects PRs)         |
+| GET    | `/api/workouts`                  | yes  | `?startDate=&endDate=&page=&limit=`       |
+| GET    | `/api/workouts/:id`              | yes  | Workout detail                            |
+| PUT    | `/api/workouts/:id`              | yes  | Update                                    |
+| DELETE | `/api/workouts/:id`              | yes  | Delete                                    |
+| GET    | `/api/progress/volume`           | yes  | `?exercise=&range=7d                      | 30d | 90d` |
+| GET    | `/api/progress/personal-bests`   | yes  | List of PRs per exercise                  |
+| GET    | `/api/progress/frequency`        | yes  | Workouts per week                         |
+| GET    | `/api/progress/muscle-breakdown` | yes  | Sets per muscle group                     |
+| POST   | `/api/bodystats`                 | yes  | Create entry                              |
+| GET    | `/api/bodystats`                 | yes  | Last 30                                   |
+| GET    | `/api/bodystats/trend`           | yes  | Time series                               |
+| GET    | `/api/streaks`                   | yes  | Streak + 90-day heatmap                   |
+| GET    | `/api/users/profile`             | yes  | Profile                                   |
+| PUT    | `/api/users/profile`             | yes  | Update                                    |
+| PUT    | `/api/users/level`               | yes  | Set level                                 |
+| POST   | `/api/ai/insights`               | yes  | Generate fresh insights (AI call)         |
+| GET    | `/api/ai/insights/latest`        | yes  | Recent insights                           |
+| POST   | `/api/upload/photo`              | yes  | multipart `file` — returns Cloudinary URL |
 
 ### How AI insights work
 
