@@ -17,6 +17,7 @@ export interface IUser extends Document {
   profilePhoto?: string;
   streakCount: number;
   lastWorkoutDate?: Date;
+  dailyCalorieGoal: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -49,6 +50,7 @@ const userSchema = new Schema<IUser>(
     profilePhoto: String,
     streakCount: { type: Number, default: 0 },
     lastWorkoutDate: Date,
+    dailyCalorieGoal: { type: Number, default: 400 },
   },
   { timestamps: true }
 );

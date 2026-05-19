@@ -3,9 +3,18 @@ import asyncHandler from 'express-async-handler';
 import mongoose from 'mongoose';
 import { z } from 'zod';
 import { WorkoutSession, IWorkoutExercise } from '../models/WorkoutSession';
+import { Exercise } from '../models/Exercise';
+import { User } from '../models/User';
 import { AuthRequest } from '../middleware/auth';
 import { HttpError } from '../middleware/errorHandler';
-import { calcVolume, calcDuration, calcCaloriesBurned, bestSetValue } from '../utils/helpers';
+import {
+  calcVolume,
+  calcDuration,
+  calcExerciseCalories,
+  metForCategory,
+  bestSetValue,
+  FALLBACK_BODYWEIGHT_KG,
+} from '../utils/helpers';
 import { updateStreakOnWorkout } from '../services/streakService';
 
 const setSchema = z.object({
@@ -66,7 +75,32 @@ export const create = asyncHandler(async (req: AuthRequest, res: Response) => {
 
   const totalVolume = calcVolume(exercises);
   const totalDuration = data.totalDuration ?? calcDuration(exercises);
-  const caloriesBurned = calcCaloriesBurned(totalDuration);
+
+  // MET-based calorie burn: load the user's bodyweight + each exercise's
+  // metValue/category, compute per-exercise, then sum for the session total.
+  const [user, exerciseDocs] = await Promise.all([
+    User.findById(userId).select('weight').lean(),
+    Exercise.find({ _id: { $in: exercises.map((e) => e.exerciseId) } })
+      .select('metValue category')
+      .lean(),
+  ]);
+  const bodyWeightKg = user?.weight ?? FALLBACK_BODYWEIGHT_KG;
+  const metByExId = new Map<string, number>();
+  for (const ex of exerciseDocs) {
+    metByExId.set(ex._id.toString(), ex.metValue ?? metForCategory(ex.category));
+  }
+
+  const caloriesPerExercise = exercises.map((ex) => ({
+    exerciseId: ex.exerciseId,
+    calories: calcExerciseCalories({
+      sets: ex.sets,
+      met: metByExId.get(ex.exerciseId.toString()) ?? 4.5,
+      bodyWeightKg,
+    }),
+  }));
+  const caloriesBurned = Math.round(
+    caloriesPerExercise.reduce((sum, c) => sum + c.calories, 0),
+  );
 
   const session = await WorkoutSession.create({
     userId,
@@ -76,6 +110,7 @@ export const create = asyncHandler(async (req: AuthRequest, res: Response) => {
     totalVolume,
     totalDuration,
     caloriesBurned,
+    caloriesPerExercise,
     mood: data.mood,
     notes: data.notes,
   });

@@ -15,6 +15,7 @@ import streakRoutes from './routes/streakRoutes';
 import userRoutes from './routes/userRoutes';
 import aiRoutes from './routes/aiRoutes';
 import uploadRoutes from './routes/uploadRoutes';
+import caloriesRoutes from './routes/caloriesRoutes';
 import { errorHandler, notFound } from './middleware/errorHandler';
 
 export function createApp(): Application {
@@ -49,6 +50,7 @@ export function createApp(): Application {
   app.use('/api/users', userRoutes);
   app.use('/api/ai', aiRoutes);
   app.use('/api/upload', uploadRoutes);
+  app.use('/api/calories', caloriesRoutes);
 
   app.use(notFound);
   app.use(errorHandler);

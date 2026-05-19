@@ -13,6 +13,7 @@ const profileSchema = z.object({
   gender: z.enum(['male', 'female', 'other', 'prefer_not_to_say']).optional(),
   goals: z.array(z.string()).optional(),
   profilePhoto: z.string().url().optional(),
+  dailyCalorieGoal: z.number().int().min(50).max(5000).optional(),
 });
 
 const levelSchema = z.object({

@@ -15,6 +15,11 @@ export interface IWorkoutExercise {
   personalBest: boolean;
 }
 
+export interface ICaloriesPerExercise {
+  exerciseId: Types.ObjectId;
+  calories: number;
+}
+
 export interface IWorkoutSession extends Document {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
@@ -24,6 +29,7 @@ export interface IWorkoutSession extends Document {
   totalDuration: number;
   totalVolume: number;
   caloriesBurned: number;
+  caloriesPerExercise: ICaloriesPerExercise[];
   mood?: 'great' | 'okay' | 'tired';
   notes?: string;
   createdAt: Date;
@@ -60,6 +66,18 @@ const workoutSessionSchema = new Schema<IWorkoutSession>(
     totalDuration: { type: Number, default: 0 },
     totalVolume: { type: Number, default: 0 },
     caloriesBurned: { type: Number, default: 0 },
+    caloriesPerExercise: {
+      type: [
+        new Schema<ICaloriesPerExercise>(
+          {
+            exerciseId: { type: Schema.Types.ObjectId, ref: 'Exercise', required: true },
+            calories: { type: Number, default: 0 },
+          },
+          { _id: false },
+        ),
+      ],
+      default: [],
+    },
     mood: { type: String, enum: ['great', 'okay', 'tired'] },
     notes: String,
   },

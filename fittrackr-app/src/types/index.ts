@@ -15,6 +15,7 @@ export interface User {
   profilePhoto?: string;
   streakCount: number;
   lastWorkoutDate?: string;
+  dailyCalorieGoal?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -33,6 +34,7 @@ export interface Exercise {
   videoUrl: string;
   equipment: string[];
   caloriesPerMinute: number;
+  metValue?: number;
 }
 
 export interface WorkoutSet {
@@ -59,6 +61,7 @@ export interface WorkoutSession {
   totalDuration: number;
   totalVolume: number;
   caloriesBurned: number;
+  caloriesPerExercise?: Array<{ exerciseId: string; calories: number }>;
   mood?: Mood;
   notes?: string;
   createdAt: string;

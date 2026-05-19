@@ -17,6 +17,7 @@ export interface IExercise extends Document {
   videoUrl: string;
   equipment: string[];
   caloriesPerMinute: number;
+  metValue: number;
 }
 
 const exerciseSchema = new Schema<IExercise>(
@@ -46,6 +47,7 @@ const exerciseSchema = new Schema<IExercise>(
     videoUrl: { type: String, default: '' },
     equipment: { type: [String], default: [] },
     caloriesPerMinute: { type: Number, default: 5 },
+    metValue: { type: Number, default: 4.5 },
   },
   { timestamps: true }
 );

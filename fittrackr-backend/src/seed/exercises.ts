@@ -1460,13 +1460,37 @@ function imageForExercise(slug: string, muscle: string | undefined): string {
   return `${GITHUB_EXERCISE_BASE}/${repoId}/0.jpg`;
 }
 
+// MET value by Exercise.category. Bodyweight exercises get bumped up slightly
+// inside the strength bucket, and running cardio gets a higher MET than cycling.
+const CATEGORY_MET_DEFAULT: Record<string, number> = {
+  strength: 5.0,
+  HIIT: 8.0,
+  cardio: 7.5,
+  flexibility: 2.5,
+};
+
+function metForSeed(e: SeedExercise): number {
+  const equip = e.equipment.map((x) => x.toLowerCase());
+  const isBodyweight = equip.length === 0 || equip.every((x) => x === 'mat' || x === 'bodyweight');
+  if (e.category === 'cardio') {
+    if (/run|treadmill|sprint|jump|burpee|mountain/i.test(e.name)) return 9.8;
+    if (/bike|cycl|ellipt|row|stair/i.test(e.name)) return 7.5;
+    return 7.0;
+  }
+  if (e.category === 'HIIT') return 8.0;
+  if (e.category === 'flexibility') return 2.5;
+  if (e.category === 'strength' && isBodyweight) return 4.0;
+  return CATEGORY_MET_DEFAULT[e.category] ?? 4.5;
+}
+
 export function withDerivedFields(e: SeedExercise) {
   const slug = slugify(e.name);
   const imageUrl = imageForExercise(slug, e.muscleGroup.primary);
   const videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
     e.name + ' exercise tutorial'
   )}`;
-  return { ...e, slug, imageUrl, videoUrl };
+  const metValue = metForSeed(e);
+  return { ...e, slug, imageUrl, videoUrl, metValue };
 }
 
 export interface SeedTemplate {

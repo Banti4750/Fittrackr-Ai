@@ -76,13 +76,14 @@ export default function ActiveWorkout() {
 
   const create = useMutation({
     mutationFn: createWorkout,
-    onSuccess: () => {
+    onSuccess: (session) => {
       qc.invalidateQueries({ queryKey: ['workouts'] });
       qc.invalidateQueries({ queryKey: ['streak'] });
       qc.invalidateQueries({ queryKey: ['volume'] });
       qc.invalidateQueries({ queryKey: ['prs'] });
+      qc.invalidateQueries({ queryKey: ['calories'] });
       reset();
-      router.replace('/(tabs)/home');
+      router.replace(`/workout/summary/${session._id}`);
     },
     onError: (e: any) => Alert.alert('Save failed', e?.response?.data?.error ?? e?.message ?? 'Unknown error'),
   });

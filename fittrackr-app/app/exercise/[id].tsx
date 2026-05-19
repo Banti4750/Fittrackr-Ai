@@ -10,13 +10,26 @@ import { getExercise } from '../../src/api/exercises';
 import { getVolume } from '../../src/api/progress';
 import { ProgressChart } from '../../src/components/ProgressChart';
 import { useWorkoutStore } from '../../src/stores/useWorkoutStore';
+import { useAuthStore } from '../../src/stores/useAuthStore';
 import { formatDate } from '../../src/utils/format';
+
+// Rough per-set duration in seconds: ~8 reps × 4s + ~60s rest. Used only for
+// the "estimated burn" chip on the detail page; the real workout uses the
+// actual logged rep/duration/rest values for the MET calculation.
+const ASSUMED_SET_SECONDS = 90;
+
+function estimatePerSetCalories(metValue: number | undefined, bodyWeightKg: number): number {
+  const met = metValue ?? 4.5;
+  return Math.round(met * bodyWeightKg * (ASSUMED_SET_SECONDS / 3600) * 10) / 10;
+}
 
 export default function ExerciseDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { colors } = useTheme();
   const addExercise = useWorkoutStore((s) => s.addExercise);
+  const user = useAuthStore((s) => s.user);
+  const bodyWeightKg = user?.weight ?? 70;
 
   const ex = useQuery({ queryKey: ['exercise', id], queryFn: () => getExercise(id!) });
   const history = useQuery({
@@ -41,6 +54,33 @@ export default function ExerciseDetail() {
         ))}
         <LevelBadge level={e.difficulty} />
       </View>
+
+      {(() => {
+        const perSet = estimatePerSetCalories(e.metValue, bodyWeightKg);
+        const forFour = Math.round(perSet * 4 * 10) / 10;
+        return (
+          <View
+            style={{
+              backgroundColor: colors.accentOrangeMuted,
+              borderColor: colors.accentOrange,
+              borderWidth: 1,
+              borderRadius: 999,
+              paddingHorizontal: 12,
+              paddingVertical: 6,
+              alignSelf: 'flex-start',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            <Text style={{ fontSize: 12 }}>🔥</Text>
+            <Text style={{ color: colors.accentOrange, fontSize: 12, fontWeight: '700' }}>
+              ~{perSet} kcal/set · ~{forFour} kcal for 4 sets
+            </Text>
+          </View>
+        );
+      })()}
+
       <Text style={{ color: colors.textMuted }}>{e.description}</Text>
 
       <Pressable

@@ -7,12 +7,14 @@ import { WorkoutCard } from '../../src/components/WorkoutCard';
 import { AIInsightCard } from '../../src/components/AIInsightCard';
 import { BodyHeatmap } from '../../src/components/BodyHeatmap';
 import { Logo } from '../../src/components/Logo';
+import { CalorieRing } from '../../src/components/CalorieRing';
 import { useTheme } from '../../src/theme/useTheme';
 import { useAuthStore } from '../../src/stores/useAuthStore';
 import { listWorkouts } from '../../src/api/workouts';
 import { latestInsights } from '../../src/api/ai';
 import { getStreak } from '../../src/api/streaks';
 import { getMuscleHeatmap } from '../../src/api/progress';
+import { getCaloriesToday } from '../../src/api/calories';
 import { greeting, formatVolume } from '../../src/utils/format';
 
 export default function Home() {
@@ -24,6 +26,7 @@ export default function Home() {
   const insights = useQuery({ queryKey: ['insights', 'latest'], queryFn: latestInsights });
   const streak = useQuery({ queryKey: ['streak'], queryFn: getStreak });
   const heatmap = useQuery({ queryKey: ['muscle-heatmap', '7d'], queryFn: () => getMuscleHeatmap('7d') });
+  const caloriesToday = useQuery({ queryKey: ['calories', 'today'], queryFn: getCaloriesToday });
 
   const recent = workouts.data?.sessions?.slice(0, 3) ?? [];
   const weekSessions =
@@ -81,6 +84,47 @@ export default function Home() {
           </Text>
         </View>
         <Text style={{ fontSize: 32 }}>➕</Text>
+      </Pressable>
+
+      <Pressable
+        onPress={() => router.push('/calories')}
+        style={{
+          backgroundColor: colors.card,
+          borderRadius: 18,
+          borderWidth: 1,
+          borderColor: colors.border,
+          padding: 16,
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 16,
+        }}
+      >
+        <CalorieRing
+          calories={caloriesToday.data?.calories ?? 0}
+          goal={caloriesToday.data?.goal ?? 400}
+          size={140}
+          strokeWidth={12}
+        />
+        <View style={{ flex: 1, gap: 6 }}>
+          <Text style={{ color: colors.textMuted, fontSize: 11, letterSpacing: 1.5, fontWeight: '700' }}>
+            TODAY'S BURN
+          </Text>
+          <Text style={{ color: colors.text, fontSize: 22, fontWeight: '800' }}>
+            {caloriesToday.data?.calories ?? 0}
+            <Text style={{ color: colors.textMuted, fontSize: 14, fontWeight: '600' }}> kcal</Text>
+          </Text>
+          {caloriesToday.data && !caloriesToday.data.weightSet ? (
+            <Pressable onPress={() => router.push('/bodystats')}>
+              <Text style={{ color: colors.accentOrange, fontSize: 12, fontWeight: '700' }}>
+                ⚠ Set your weight for accurate calories →
+              </Text>
+            </Pressable>
+          ) : (
+            <Text style={{ color: colors.textMuted, fontSize: 12 }}>
+              Goal {caloriesToday.data?.goal ?? 400} kcal · Tap for details
+            </Text>
+          )}
+        </View>
       </Pressable>
 
       {heatmap.data && heatmap.data.heatmap.length > 0 ? (

@@ -76,8 +76,13 @@ export default function RootLayout() {
               <Stack.Screen name="insights" options={{ ...headerScreenOptions, title: 'AI Insights' }} />
               <Stack.Screen name="bodystats" options={{ ...headerScreenOptions, title: 'Body Stats' }} />
               <Stack.Screen name="streaks" options={{ ...headerScreenOptions, title: 'Streaks' }} />
+              <Stack.Screen name="calories" options={{ ...headerScreenOptions, title: 'Calorie Burn' }} />
               <Stack.Screen name="workout/active" options={{ ...headerScreenOptions, title: 'Active Workout' }} />
               <Stack.Screen name="workout/[id]" options={{ ...headerScreenOptions, title: 'Workout' }} />
+              <Stack.Screen
+                name="workout/summary/[id]"
+                options={{ ...headerScreenOptions, title: 'Summary', headerBackVisible: false }}
+              />
               <Stack.Screen name="exercise/[id]" options={{ ...headerScreenOptions, title: 'Exercise' }} />
             </Stack>
           </AuthGate>
