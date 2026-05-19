@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1242" height="2436" viewBox="0 0 1242 2436">
+  <defs>
+    <linearGradient id="brandGlow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#C8FF00"   stop-opacity="0.10"/>
+      <stop offset="50%"  stop-color="#000000"          stop-opacity="0"/>
+      <stop offset="100%" stop-color="#FF5C00" stop-opacity="0.10"/>
+    </linearGradient>
+  </defs>
+  <rect width="1242" height="2436" fill="#0A0A0A"/>
+  <rect width="1242" height="2436" fill="url(#brandGlow)"/>
+  <svg x="271" y="868" width="700" height="700" viewBox="0 0 1024 1024">
+    
+  
+  
+    <!-- F -->
+    <rect x="220" y="300" width="90"  height="430" fill="#C8FF00"/>
+    <rect x="220" y="300" width="260" height="80"  fill="#C8FF00"/>
+    <rect x="220" y="480" width="200" height="70"  fill="#C8FF00"/>
+    <!-- T -->
+    <rect x="540" y="300" width="280" height="80"  fill="#FFFFFF"/>
+    <rect x="635" y="300" width="90"  height="430" fill="#FFFFFF"/>
+  
+  
+    <g transform="translate(362 790)">
+      <rect width="300" height="100" rx="50" ry="50"
+            fill="#2A1300" stroke="#FF5C00" stroke-width="4"/>
+      <!-- A (path) -->
+      <path d="M 70 78
+               L 100 22
+               L 130 22
+               L 160 78
+               L 138 78
+               L 132 65
+               L 98 65
+               L 92 78 Z
+               M 104 50
+               L 126 50
+               L 115 28 Z"
+            fill="#FF5C00"/>
+      <!-- I (rect) -->
+      <rect x="190" y="22" width="22" height="56" fill="#FF5C00"/>
+      <!-- dot below I to make it more readable as letterform -->
+      <rect x="180" y="22" width="42" height="10" fill="#FF5C00"/>
+      <rect x="180" y="68" width="42" height="10" fill="#FF5C00"/>
+    </g>
+  
+
+  </svg>
+</svg>

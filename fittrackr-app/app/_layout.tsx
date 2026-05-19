@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
 import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -7,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useAuthStore } from '../src/stores/useAuthStore';
 import { setupNotifications } from '../src/utils/notifications';
 import { darkColors } from '../src/theme/colors';
+import { SplashScreen } from '../src/components/SplashScreen';
 
 setupNotifications();
 
@@ -14,14 +16,20 @@ const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, retry: 1 } },
 });
 
+const MIN_SPLASH_MS = 1600;
+
 function AuthGate({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const segments = useSegments();
-  const { user, hydrated, hydrate } = useAuthStore();
+  const { user, hydrate } = useAuthStore();
   const [bootDone, setBootDone] = useState(false);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+  const [splashGone, setSplashGone] = useState(false);
 
   useEffect(() => {
     hydrate().finally(() => setBootDone(true));
+    const t = setTimeout(() => setMinTimeElapsed(true), MIN_SPLASH_MS);
+    return () => clearTimeout(t);
   }, []);
 
   useEffect(() => {
@@ -31,7 +39,16 @@ function AuthGate({ children }: { children: React.ReactNode }) {
     if (user && inAuthGroup) router.replace('/(tabs)/home');
   }, [bootDone, user, segments]);
 
-  return <>{children}</>;
+  const splashVisible = !(bootDone && minTimeElapsed);
+
+  return (
+    <View style={{ flex: 1 }}>
+      {children}
+      {!splashGone && (
+        <SplashScreen visible={splashVisible} onFadedOut={() => setSplashGone(true)} />
+      )}
+    </View>
+  );
 }
 
 export default function RootLayout() {

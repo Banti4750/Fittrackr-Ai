@@ -6,6 +6,7 @@ import { Screen } from '../../src/components/Screen';
 import { WorkoutCard } from '../../src/components/WorkoutCard';
 import { AIInsightCard } from '../../src/components/AIInsightCard';
 import { BodyHeatmap } from '../../src/components/BodyHeatmap';
+import { Logo } from '../../src/components/Logo';
 import { useTheme } from '../../src/theme/useTheme';
 import { useAuthStore } from '../../src/stores/useAuthStore';
 import { listWorkouts } from '../../src/api/workouts';
@@ -35,6 +36,16 @@ export default function Home() {
 
   return (
     <Screen>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 4,
+        }}
+      >
+        <Logo size="sm" />
+      </View>
       <View>
         <Text style={{ color: colors.textMuted, fontSize: 14 }}>{greeting()},</Text>
         <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800' }}>

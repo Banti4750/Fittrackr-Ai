@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Screen } from '../src/components/Screen';
 import { Button } from '../src/components/Button';
 import { AIInsightCard } from '../src/components/AIInsightCard';
+import { Logo } from '../src/components/Logo';
 import { useTheme } from '../src/theme/useTheme';
 import { generateInsights, latestInsights } from '../src/api/ai';
 import { formatDateTime } from '../src/utils/format';
@@ -22,6 +23,30 @@ export default function Insights() {
 
   return (
     <Screen>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingBottom: 6,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.border,
+        }}
+      >
+        <Logo size="md" />
+        <Text
+          style={{
+            color: colors.accentOrange,
+            fontSize: 11,
+            fontWeight: '700',
+            letterSpacing: 2,
+            textTransform: 'uppercase',
+          }}
+        >
+          Coach
+        </Text>
+      </View>
+
       {gen.isPending ? (
         <View style={{ alignItems: 'center', padding: 24, gap: 8 }}>
           <ActivityIndicator size="large" color={colors.primary} />

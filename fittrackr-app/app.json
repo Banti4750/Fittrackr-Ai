@@ -1,15 +1,17 @@
 {
   "expo": {
-    "name": "FitTrackr",
+    "name": "FitTrackr AI",
     "slug": "fittrackr",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "fittrackr",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "newArchEnabled": true,
+    "icon": "./assets/icon.png",
     "splash": {
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0f172a"
+      "backgroundColor": "#0A0A0A"
     },
     "ios": {
       "supportsTablet": true,
@@ -17,11 +19,13 @@
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#0f172a"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A0A0A"
       },
       "package": "com.fittrackr.app"
     },
     "web": {
+      "favicon": "./assets/favicon.png",
       "bundler": "metro",
       "output": "static"
     },

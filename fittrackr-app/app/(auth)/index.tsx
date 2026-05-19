@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Button } from '../../src/components/Button';
+import { Logo } from '../../src/components/Logo';
 import { useTheme } from '../../src/theme/useTheme';
 
 export default function Welcome() {
@@ -19,16 +20,7 @@ export default function Welcome() {
       <View style={{ flex: 1, padding: 24, justifyContent: 'space-between' }}>
         <View style={{ marginTop: 96, alignItems: 'center', gap: 16 }}>
           <Text style={{ fontSize: 64 }}>💪</Text>
-          <Text
-            style={{
-              fontSize: 48,
-              fontWeight: '900',
-              letterSpacing: 1,
-              color: colors.text,
-            }}
-          >
-            <Text style={{ color: colors.primary }}>FIT</Text>TRACKR
-          </Text>
+          <Logo size="xl" />
           <Text
             style={{
               color: colors.textMuted,
