@@ -45,5 +45,7 @@ jobs:
           cache: npm
           cache-dependency-path: fittrackr-app/package-lock.json
 
-      - run: npm ci
+      # Expo SDK 54 pins react@19.1.0 while transitive react-dom asks for ^19.2.6.
+      # The lockfile was generated with --legacy-peer-deps; CI must match.
+      - run: npm ci --legacy-peer-deps
       - run: npm run typecheck

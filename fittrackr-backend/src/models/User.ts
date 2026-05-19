@@ -57,8 +57,8 @@ const userSchema = new Schema<IUser>(
 
 userSchema.set('toJSON', {
   transform: (_doc, ret) => {
-    delete ret.passwordHash;
-    delete ret.__v;
+    delete (ret as any).passwordHash;
+    delete (ret as any).__v;
     return ret;
   },
 });
