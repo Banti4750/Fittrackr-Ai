@@ -1339,9 +1339,130 @@ export const seedExercises: SeedExercise[] = [
   }),
 ];
 
+// Real exercise demonstration images from the open-source yuhonas/free-exercise-db
+// dataset, served via the GitHub raw CDN. Each slug maps to a verified directory id
+// in that repo. Pattern: https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/{id}/0.jpg
+const SLUG_TO_REPO_ID: Record<string, string> = {
+  // chest
+  'barbell-bench-press': 'Barbell_Bench_Press_-_Medium_Grip',
+  'incline-dumbbell-press': 'Incline_Dumbbell_Press',
+  'decline-barbell-press': 'Decline_Barbell_Bench_Press',
+  'flat-dumbbell-press': 'Dumbbell_Bench_Press',
+  'dumbbell-fly': 'Dumbbell_Flyes',
+  'cable-crossover': 'Cable_Crossover',
+  'push-up': 'Pushups',
+  'diamond-push-up': 'Close-Grip_Push-Up_off_of_a_Dumbbell',
+  'chest-dip': 'Dips_-_Chest_Version',
+  // back
+  'pull-up': 'Pullups',
+  'chin-up': 'Chin-Up',
+  'lat-pulldown': 'Wide-Grip_Lat_Pulldown',
+  'bent-over-barbell-row': 'Bent_Over_Barbell_Row',
+  't-bar-row': 'T-Bar_Row_with_Handle',
+  'seated-cable-row': 'Seated_Cable_Rows',
+  'single-arm-dumbbell-row': 'One-Arm_Dumbbell_Row',
+  'conventional-deadlift': 'Barbell_Deadlift',
+  'romanian-deadlift': 'Romanian_Deadlift',
+  'face-pull': 'Face_Pull',
+  'barbell-shrug': 'Barbell_Shrug',
+  // shoulders
+  'overhead-barbell-press': 'Barbell_Shoulder_Press',
+  'seated-dumbbell-shoulder-press': 'Seated_Dumbbell_Press',
+  'arnold-press': 'Arnold_Dumbbell_Press',
+  'dumbbell-lateral-raise': 'Side_Lateral_Raise',
+  'front-raise': 'Front_Dumbbell_Raise',
+  'reverse-pec-deck': 'Reverse_Flyes',
+  'barbell-upright-row': 'Upright_Barbell_Row',
+  'push-press': 'Push_Press',
+  // biceps
+  'barbell-curl': 'Barbell_Curl',
+  'dumbbell-curl': 'Dumbbell_Bicep_Curl',
+  'hammer-curl': 'Hammer_Curls',
+  'preacher-curl': 'Preacher_Curl',
+  'cable-curl': 'Standing_Biceps_Cable_Curl',
+  'concentration-curl': 'Concentration_Curls',
+  'incline-dumbbell-curl': 'Incline_Dumbbell_Curl',
+  // triceps
+  'tricep-pushdown': 'Triceps_Pushdown',
+  'skull-crusher': 'EZ-Bar_Skullcrusher',
+  'overhead-tricep-extension': 'Triceps_Overhead_Extension_with_Rope',
+  'close-grip-bench-press': 'Close-Grip_Barbell_Bench_Press',
+  'tricep-dip': 'Dips_-_Triceps_Version',
+  'rope-tricep-pushdown': 'Triceps_Pushdown_-_Rope_Attachment',
+  // legs / quads / glutes / hamstrings
+  'barbell-back-squat': 'Barbell_Squat',
+  'front-squat': 'Front_Barbell_Squat',
+  'goblet-squat': 'Goblet_Squat',
+  'walking-lunge': 'Bodyweight_Walking_Lunge',
+  'bulgarian-split-squat': 'Split_Squats',
+  'leg-press': 'Leg_Press',
+  'leg-curl': 'Lying_Leg_Curls',
+  'leg-extension': 'Leg_Extensions',
+  'standing-calf-raise': 'Standing_Calf_Raises',
+  'hip-thrust': 'Barbell_Hip_Thrust',
+  'sumo-deadlift': 'Sumo_Deadlift',
+  'hack-squat': 'Hack_Squat',
+  'step-up': 'Dumbbell_Step_Ups',
+  // core
+  'plank': 'Plank',
+  'side-plank': 'Push_Up_to_Side_Plank',
+  'crunch': 'Crunches',
+  'russian-twist': 'Russian_Twist',
+  'hanging-leg-raise': 'Hanging_Leg_Raise',
+  'bicycle-crunch': 'Cross-Body_Crunch',
+  'cable-crunch': 'Cable_Crunch',
+  'dead-bug': 'Dead_Bug',
+  'ab-wheel-rollout': 'Barbell_Ab_Rollout',
+  // cardio
+  'treadmill-run': 'Running_Treadmill',
+  'stationary-bike': 'Bicycling_Stationary',
+  'rowing-machine': 'Rowing_Stationary',
+  'jump-rope': 'Rope_Jumping',
+  'stair-climber': 'Stairmaster',
+  'elliptical': 'Elliptical_Trainer',
+  'mountain-climbers': 'Mountain_Climbers',
+  'box-jump': 'Front_Box_Jump',
+  'kettlebell-swing': 'One-Arm_Kettlebell_Swings',
+  'battle-ropes': 'Battling_Ropes',
+  'sled-push': 'Sled_Push',
+  'barbell-thruster': 'Kettlebell_Thruster',
+  // stretches
+  'cat-cow-stretch': 'Cat_Stretch',
+  'hip-flexor-stretch': 'Kneeling_Hip_Flexor',
+  'standing-hamstring-stretch': 'Standing_Hamstring_and_Calf_Stretch',
+};
+
+// Anything not in the slug map (e.g. burpees, wall ball, pigeon stretch) falls
+// back to a representative exercise from the same muscle group, so the card
+// still shows a real demo image rather than a 404.
+const MUSCLE_FALLBACK_ID: Record<string, string> = {
+  chest:      'Dumbbell_Bench_Press',
+  back:       'Bent_Over_Barbell_Row',
+  shoulders:  'Barbell_Shoulder_Press',
+  biceps:     'Barbell_Curl',
+  triceps:    'Triceps_Pushdown',
+  legs:       'Barbell_Squat',
+  quads:      'Barbell_Squat',
+  hamstrings: 'Romanian_Deadlift',
+  glutes:     'Barbell_Hip_Thrust',
+  core:       'Plank',
+  cardio:     'Mountain_Climbers',
+};
+
+const GITHUB_EXERCISE_BASE =
+  'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises';
+
+function imageForExercise(slug: string, muscle: string | undefined): string {
+  const repoId =
+    SLUG_TO_REPO_ID[slug] ??
+    MUSCLE_FALLBACK_ID[(muscle ?? '').toLowerCase()] ??
+    'Barbell_Squat';
+  return `${GITHUB_EXERCISE_BASE}/${repoId}/0.jpg`;
+}
+
 export function withDerivedFields(e: SeedExercise) {
   const slug = slugify(e.name);
-  const imageUrl = `https://picsum.photos/seed/${slug}/800/600`;
+  const imageUrl = imageForExercise(slug, e.muscleGroup.primary);
   const videoUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(
     e.name + ' exercise tutorial'
   )}`;

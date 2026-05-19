@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, Platform, Text, TextInput, View ,Alert} from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, Text, TextInput, View, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { z } from 'zod';
 import { Screen } from '../../src/components/Screen';
@@ -111,29 +111,54 @@ export default function Register() {
 
 function Field(props: React.ComponentProps<typeof TextInput> & { label: string; error?: string }) {
   const { colors } = useTheme();
-  const { label, error, ...rest } = props;
+  const { label, error, secureTextEntry, ...rest } = props;
+  const [revealed, setRevealed] = useState(false);
+  const isPassword = !!secureTextEntry;
 
   return (
     <View style={{ gap: 4 }}>
       <Text style={{ color: colors.textMuted, fontSize: 12, fontWeight: '600' }}>
         {label.toUpperCase()}
       </Text>
-      <TextInput
-        autoCapitalize="none"
-        placeholderTextColor={colors.textMuted}
-        {...rest}
+      <View
         style={{
+          flexDirection: 'row',
+          alignItems: 'center',
           backgroundColor: colors.card,
-          color: colors.text,
           borderRadius: 10,
-          paddingHorizontal: 12,
-          paddingVertical: 12,
           borderWidth: 1,
-          // Red border when there's an error
           borderColor: error ? '#ef4444' : colors.border,
         }}
-      />
-      {/* Inline error message */}
+      >
+        <TextInput
+          autoCapitalize="none"
+          placeholderTextColor={colors.textMuted}
+          secureTextEntry={isPassword && !revealed}
+          {...rest}
+          style={{
+            flex: 1,
+            color: colors.text,
+            paddingHorizontal: 12,
+            paddingVertical: 12,
+            paddingRight: isPassword ? 4 : 12,
+          }}
+        />
+        {isPassword && (
+          <Pressable
+            onPress={() => setRevealed((v) => !v)}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={revealed ? 'Hide password' : 'Show password'}
+            style={({ pressed }) => ({
+              paddingHorizontal: 12,
+              paddingVertical: 12,
+              opacity: pressed ? 0.6 : 1,
+            })}
+          >
+            <Text style={{ fontSize: 18 }}>{revealed ? '🙈' : '👁'}</Text>
+          </Pressable>
+        )}
+      </View>
       {error && (
         <Text style={{ color: '#ef4444', fontSize: 12, marginTop: 2 }}>
           {error}
