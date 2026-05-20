@@ -40,3 +40,8 @@ jobs:
 
       - name: Publish update
         run: eas update --branch production --message "${{ github.event.head_commit.message }}"
+        env:
+          # eas update does NOT read the env block from eas.json build profiles,
+          # so the API URL must be supplied here or the OTA bundle falls back to
+          # localhost and every installed app breaks with a network error.
+          EXPO_PUBLIC_API_URL: https://fittrackr-ai.onrender.com/api
