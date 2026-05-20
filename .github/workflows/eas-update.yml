@@ -1,12 +1,14 @@
 name: EAS Update (OTA)
 
-# Publishes an over-the-air update to installed production apps on every
-# push to main. Only JS/asset changes ship this way — native changes still
-# require a new build (npm run build:android:production).
+# Publishes an over-the-air update to installed production apps when app
+# code changes land on main. Only JS/asset changes ship this way — native
+# changes still require a new build (npm run build:android:production).
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'fittrackr-app/**'
 
 concurrency:
   group: eas-update-${{ github.ref }}
@@ -44,4 +46,4 @@ jobs:
           # eas update does NOT read the env block from eas.json build profiles,
           # so the API URL must be supplied here or the OTA bundle falls back to
           # localhost and every installed app breaks with a network error.
-          EXPO_PUBLIC_API_URL: https://fittrackr-ai.onrender.com/api
+          EXPO_PUBLIC_API_URL: ${{ secrets.EXPO_PUBLIC_API_URL }}
