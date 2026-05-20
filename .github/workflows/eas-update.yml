@@ -1,0 +1,42 @@
+name: EAS Update (OTA)
+
+# Publishes an over-the-air update to installed production apps on every
+# push to main. Only JS/asset changes ship this way — native changes still
+# require a new build (npm run build:android:production).
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: eas-update-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update:
+    name: Publish OTA update → production
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: fittrackr-app
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: fittrackr-app/package-lock.json
+
+      - run: npm ci --legacy-peer-deps
+
+      # Gate the publish on a passing typecheck so a broken build never ships.
+      - run: npm run typecheck
+
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Publish update
+        run: eas update --branch production --message "${{ github.event.head_commit.message }}"
