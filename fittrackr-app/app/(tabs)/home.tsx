@@ -52,7 +52,7 @@ export default function Home() {
       <View>
         <Text style={{ color: colors.textMuted, fontSize: 14 }}>{greeting()},</Text>
         <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800' }}>
-          {user?.name?.split(' ')[0] ?? 'Athlete'}
+          {user?.name?.split(' ')[0] ?? 'Athlete'} 🏋️
         </Text>
       </View>
 
