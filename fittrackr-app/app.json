@@ -47,6 +47,7 @@
     },
     "extra": {
       "router": {},
+      "apiUrl": "https://fittrackr-ai.onrender.com/api",
       "eas": {
         "projectId": "c4705909-e5c0-4d0c-8e80-f7017321bccf"
       }
