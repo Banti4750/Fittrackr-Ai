@@ -1,5 +1,6 @@
 export type Level = 'beginner' | 'intermediate' | 'elite';
 export type Category = 'strength' | 'cardio' | 'flexibility' | 'HIIT';
+export type Location = 'home' | 'gym';
 export type Mood = 'great' | 'okay' | 'tired';
 
 export interface User {
@@ -27,6 +28,7 @@ export interface Exercise {
   muscleGroup: { primary: string; secondary: string[] };
   category: Category;
   difficulty: Level;
+  location?: Location;
   description: string;
   instructions: string[];
   tips: string[];

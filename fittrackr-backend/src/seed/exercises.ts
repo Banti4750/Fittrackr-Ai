@@ -1337,6 +1337,198 @@ export const seedExercises: SeedExercise[] = [
     equipment: ['mat'],
     caloriesPerMinute: 2,
   }),
+
+  // ────────── HOME / NO-GYM ──────────
+  // Bodyweight and household-item moves for anyone training without a gym.
+  ex({
+    name: 'Glute Bridge',
+    muscleGroup: { primary: 'glutes', secondary: ['hamstrings', 'core'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Floor hip extension that fires up the glutes — no equipment needed.',
+    instructions: [
+      'Lie on your back, knees bent, feet flat and hip-width apart.',
+      'Drive through your heels to lift your hips toward the ceiling.',
+      'Squeeze your glutes hard at the top.',
+      'Lower with control without resting on the floor.',
+    ],
+    tips: ['Keep ribs down — don\'t arch the lower back', 'Pause for a beat at the top'],
+    equipment: ['bodyweight'],
+    caloriesPerMinute: 5,
+  }),
+  ex({
+    name: 'Wall Sit',
+    muscleGroup: { primary: 'quads', secondary: ['glutes', 'core'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Isometric quad burner you can do against any wall.',
+    instructions: [
+      'Stand with your back flat against a wall.',
+      'Slide down until your thighs are parallel to the floor.',
+      'Keep knees over ankles, shins vertical.',
+      'Hold for time.',
+    ],
+    tips: ['Keep your whole back on the wall', 'Hold a backpack on your lap to add load'],
+    equipment: ['bodyweight', 'wall'],
+    caloriesPerMinute: 5,
+  }),
+  ex({
+    name: 'Reverse Lunge',
+    muscleGroup: { primary: 'quads', secondary: ['glutes', 'hamstrings'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Knee-friendly bodyweight lunge — great for small spaces.',
+    instructions: [
+      'Stand tall, hands on hips or holding water bottles.',
+      'Step one foot straight back and lower the back knee toward the floor.',
+      'Drive through the front heel to return to standing.',
+      'Alternate legs.',
+    ],
+    tips: ['Keep the front shin vertical', 'Stay tall through the torso'],
+    equipment: ['bodyweight'],
+    caloriesPerMinute: 7,
+  }),
+  ex({
+    name: 'Pike Push-Up',
+    muscleGroup: { primary: 'shoulders', secondary: ['triceps', 'core'] },
+    category: 'strength',
+    difficulty: 'intermediate',
+    description: 'Bodyweight shoulder press — the home alternative to overhead pressing.',
+    instructions: [
+      'Start in a downward-dog / pike position, hips high.',
+      'Bend your elbows to lower the crown of your head toward the floor.',
+      'Press back up to full extension.',
+    ],
+    tips: ['The higher your hips, the more shoulder focus', 'Elevate feet on a chair to make it harder'],
+    equipment: ['bodyweight'],
+    caloriesPerMinute: 7,
+  }),
+  ex({
+    name: 'Chair Dip',
+    muscleGroup: { primary: 'triceps', secondary: ['chest', 'shoulders'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Tricep dip off a sturdy chair, couch, or step.',
+    instructions: [
+      'Sit on the edge of a chair, hands gripping the edge beside your hips.',
+      'Slide your hips off the seat.',
+      'Bend your elbows to lower until they reach about 90°.',
+      'Press back up.',
+    ],
+    tips: ['Keep elbows pointing back, not flaring out', 'Straighten your legs to make it harder'],
+    equipment: ['chair'],
+    caloriesPerMinute: 6,
+  }),
+  ex({
+    name: 'Backpack Goblet Squat',
+    muscleGroup: { primary: 'quads', secondary: ['glutes', 'core'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Loaded squat using a weighted backpack — no dumbbell required.',
+    instructions: [
+      'Load a backpack with books or bottles and hug it to your chest.',
+      'Stand with feet shoulder-width, toes slightly out.',
+      'Squat down, keeping chest up and elbows inside the knees.',
+      'Drive back up to standing.',
+    ],
+    tips: ['Pack the weight tight so it doesn\'t shift', 'Pause briefly at the bottom'],
+    equipment: ['backpack'],
+    caloriesPerMinute: 7,
+  }),
+  ex({
+    name: 'Superman',
+    muscleGroup: { primary: 'back', secondary: ['glutes', 'shoulders'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Floor back extension for the spinal erectors — no gear needed.',
+    instructions: [
+      'Lie face down, arms extended overhead.',
+      'Lift your arms, chest, and legs off the floor at the same time.',
+      'Squeeze your glutes and lower back.',
+      'Lower with control.',
+    ],
+    tips: ['Keep your neck neutral — look at the floor', 'Hold for a beat at the top'],
+    equipment: ['bodyweight', 'mat'],
+    caloriesPerMinute: 4,
+  }),
+  ex({
+    name: 'Bird Dog',
+    muscleGroup: { primary: 'core', secondary: ['back', 'glutes'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Anti-rotation core exercise for stability and balance.',
+    instructions: [
+      'Start on hands and knees, spine neutral.',
+      'Extend your opposite arm and leg until they are in line with your torso.',
+      'Pause, then return under control.',
+      'Alternate sides.',
+    ],
+    tips: ['Keep hips level — don\'t rotate', 'Move slowly and stay balanced'],
+    equipment: ['bodyweight', 'mat'],
+    caloriesPerMinute: 4,
+  }),
+  ex({
+    name: 'Flutter Kicks',
+    muscleGroup: { primary: 'core', secondary: ['hip flexors'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Lower-ab focused kicks done flat on the floor.',
+    instructions: [
+      'Lie on your back, hands tucked under your glutes.',
+      'Lift both legs a few inches off the floor.',
+      'Alternate kicking your legs up and down in small, quick motions.',
+    ],
+    tips: ['Keep your lower back pinned to the floor', 'Brace your abs throughout'],
+    equipment: ['bodyweight', 'mat'],
+    caloriesPerMinute: 6,
+  }),
+  ex({
+    name: 'Jumping Jacks',
+    muscleGroup: { primary: 'cardio', secondary: ['shoulders', 'calves'] },
+    category: 'cardio',
+    difficulty: 'beginner',
+    description: 'Classic full-body cardio warm-up — needs zero equipment.',
+    instructions: [
+      'Stand with feet together, arms at your sides.',
+      'Jump your feet out wide while raising your arms overhead.',
+      'Jump back to the start.',
+      'Keep a steady rhythm.',
+    ],
+    tips: ['Land softly on the balls of your feet', 'Great as a warm-up or finisher'],
+    equipment: ['bodyweight'],
+    caloriesPerMinute: 9,
+  }),
+  ex({
+    name: 'High Knees',
+    muscleGroup: { primary: 'cardio', secondary: ['core', 'legs'] },
+    category: 'cardio',
+    difficulty: 'beginner',
+    description: 'In-place running drive that spikes the heart rate.',
+    instructions: [
+      'Stand tall and run in place.',
+      'Drive each knee up to hip height.',
+      'Pump your arms in time with your legs.',
+    ],
+    tips: ['Stay on the balls of your feet', 'Keep your core tight and tall'],
+    equipment: ['bodyweight'],
+    caloriesPerMinute: 11,
+  }),
+  ex({
+    name: 'Inchworm',
+    muscleGroup: { primary: 'flexibility', secondary: ['core', 'shoulders'] },
+    category: 'flexibility',
+    difficulty: 'beginner',
+    description: 'Dynamic full-body stretch and warm-up.',
+    instructions: [
+      'Stand tall, then hinge and place your hands on the floor.',
+      'Walk your hands out to a plank.',
+      'Walk your feet up toward your hands.',
+      'Stand and repeat.',
+    ],
+    tips: ['Keep your legs as straight as comfortable', 'Move slowly and breathe'],
+    equipment: ['bodyweight', 'mat'],
+    caloriesPerMinute: 5,
+  }),
 ];
 
 // Real exercise demonstration images from the open-source yuhonas/free-exercise-db
@@ -1430,6 +1622,15 @@ const SLUG_TO_REPO_ID: Record<string, string> = {
   'cat-cow-stretch': 'Cat_Stretch',
   'hip-flexor-stretch': 'Kneeling_Hip_Flexor',
   'standing-hamstring-stretch': 'Standing_Hamstring_and_Calf_Stretch',
+  // home / no-gym
+  'glute-bridge': 'Butt_Lift_Bridge',
+  'wall-sit': 'Chair_Squat',
+  'reverse-lunge': 'Bodyweight_Walking_Lunge',
+  'pike-push-up': 'Pushups',
+  'chair-dip': 'Bench_Dips',
+  'backpack-goblet-squat': 'Goblet_Squat',
+  'superman': 'Superman',
+  'bird-dog': 'Glute_Kickback',
 };
 
 // Anything not in the slug map (e.g. burpees, wall ball, pigeon stretch) falls
@@ -1447,6 +1648,7 @@ const MUSCLE_FALLBACK_ID: Record<string, string> = {
   glutes:     'Barbell_Hip_Thrust',
   core:       'Plank',
   cardio:     'Mountain_Climbers',
+  flexibility: 'Cat_Stretch',
 };
 
 const GITHUB_EXERCISE_BASE =
@@ -1483,6 +1685,23 @@ function metForSeed(e: SeedExercise): number {
   return CATEGORY_MET_DEFAULT[e.category] ?? 4.5;
 }
 
+// Gear you can reasonably have at home (or improvise) — used to flag exercises
+// as doable without a gym. Anything needing a barbell, machine, bench, cable,
+// rack, etc. is treated as gym-only.
+const HOME_EQUIPMENT = new Set([
+  'bodyweight',
+  'mat',
+  'wall',
+  'chair',
+  'backpack',
+  'jump rope',
+]);
+
+function locationForSeed(e: SeedExercise): 'home' | 'gym' {
+  if (e.equipment.length === 0) return 'home';
+  return e.equipment.every((x) => HOME_EQUIPMENT.has(x.toLowerCase())) ? 'home' : 'gym';
+}
+
 export function withDerivedFields(e: SeedExercise) {
   const slug = slugify(e.name);
   const imageUrl = imageForExercise(slug, e.muscleGroup.primary);
@@ -1490,7 +1709,8 @@ export function withDerivedFields(e: SeedExercise) {
     e.name + ' exercise tutorial'
   )}`;
   const metValue = metForSeed(e);
-  return { ...e, slug, imageUrl, videoUrl, metValue };
+  const location = locationForSeed(e);
+  return { ...e, slug, imageUrl, videoUrl, metValue, location };
 }
 
 export interface SeedTemplate {

@@ -2,6 +2,9 @@ import { Schema, model, Document, Types } from 'mongoose';
 
 export type Category = 'strength' | 'cardio' | 'flexibility' | 'HIIT';
 export type Difficulty = 'beginner' | 'intermediate' | 'elite';
+// Where the exercise can realistically be done. 'home' = needs no gym
+// equipment (bodyweight or household/minimal gear); 'gym' = needs gym kit.
+export type Location = 'home' | 'gym';
 
 export interface IExercise extends Document {
   _id: Types.ObjectId;
@@ -10,6 +13,7 @@ export interface IExercise extends Document {
   muscleGroup: { primary: string; secondary: string[] };
   category: Category;
   difficulty: Difficulty;
+  location: Location;
   description: string;
   instructions: string[];
   tips: string[];
@@ -38,6 +42,12 @@ const exerciseSchema = new Schema<IExercise>(
       type: String,
       enum: ['beginner', 'intermediate', 'elite'],
       default: 'beginner',
+      index: true,
+    },
+    location: {
+      type: String,
+      enum: ['home', 'gym'],
+      default: 'gym',
       index: true,
     },
     description: { type: String, default: '' },

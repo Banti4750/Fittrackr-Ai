@@ -7,7 +7,7 @@ import { Button } from '../../src/components/Button';
 import { useTheme } from '../../src/theme/useTheme';
 import { listTemplates, updateTemplate } from '../../src/api/templates';
 import { listExercises } from '../../src/api/exercises';
-import { Exercise, WorkoutTemplate } from '../../src/types';
+import { Exercise, Location, WorkoutTemplate } from '../../src/types';
 
 interface DraftRow {
   exercise: Exercise;
@@ -18,6 +18,11 @@ interface DraftRow {
 }
 
 const PICKER_MUSCLES = ['all', 'chest', 'back', 'legs', 'quads', 'shoulders', 'biceps', 'triceps', 'core', 'cardio'];
+const PICKER_LOCATIONS: Array<{ value: Location | 'all'; label: string }> = [
+  { value: 'all', label: 'Anywhere' },
+  { value: 'home', label: '🏠 Home' },
+  { value: 'gym', label: '🏋️ Gym' },
+];
 
 export default function EditTemplate() {
   const router = useRouter();
@@ -258,9 +263,10 @@ function ExercisePicker({
   const { colors } = useTheme();
   const [search, setSearch] = useState('');
   const [muscle, setMuscle] = useState('all');
+  const [location, setLocation] = useState<Location | 'all'>('all');
   const q = useQuery({
-    queryKey: ['picker-exercises', search, muscle],
-    queryFn: () => listExercises({ search: search || undefined, muscle }),
+    queryKey: ['picker-exercises', search, muscle, location],
+    queryFn: () => listExercises({ search: search || undefined, muscle, location }),
     enabled: open,
   });
   const data = useMemo(() => q.data ?? [], [q.data]);
@@ -318,6 +324,34 @@ function ExercisePicker({
                   }}
                 >
                   {m}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 8, paddingVertical: 4 }}
+          style={{ flexGrow: 0, marginBottom: 8 }}
+        >
+          {PICKER_LOCATIONS.map((loc) => {
+            const active = location === loc.value;
+            return (
+              <Pressable
+                key={loc.value}
+                onPress={() => setLocation(loc.value)}
+                style={{
+                  backgroundColor: active ? colors.primary : colors.card,
+                  borderColor: active ? colors.primary : colors.border,
+                  borderWidth: 1,
+                  paddingHorizontal: 14,
+                  paddingVertical: 8,
+                  borderRadius: 999,
+                }}
+              >
+                <Text style={{ color: active ? '#fff' : colors.text, fontWeight: '600' }}>
+                  {loc.label}
                 </Text>
               </Pressable>
             );

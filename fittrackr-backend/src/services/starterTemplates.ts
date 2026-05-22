@@ -86,6 +86,47 @@ const STARTERS: StarterDef[] = [
       { name: 'Standing Calf Raise', sets: 4, reps: 15 },
     ],
   },
+  // ── Home / no-gym routines (bodyweight & household items) ──
+  {
+    name: 'Home Full Body',
+    exercises: [
+      { name: 'Jumping Jacks', sets: 3, duration: 45 },
+      { name: 'Push-Up', sets: 3, reps: 12 },
+      { name: 'Reverse Lunge', sets: 3, reps: 12 },
+      { name: 'Glute Bridge', sets: 3, reps: 15 },
+      { name: 'Plank', sets: 3, duration: 45 },
+    ],
+  },
+  {
+    name: 'Home Upper Body',
+    exercises: [
+      { name: 'Push-Up', sets: 4, reps: 12 },
+      { name: 'Pike Push-Up', sets: 3, reps: 10 },
+      { name: 'Chair Dip', sets: 3, reps: 12 },
+      { name: 'Diamond Push-Up', sets: 3, reps: 10 },
+      { name: 'Superman', sets: 3, reps: 15 },
+    ],
+  },
+  {
+    name: 'Home Lower Body',
+    exercises: [
+      { name: 'Backpack Goblet Squat', sets: 4, reps: 15 },
+      { name: 'Reverse Lunge', sets: 3, reps: 12 },
+      { name: 'Wall Sit', sets: 3, duration: 45 },
+      { name: 'Glute Bridge', sets: 3, reps: 20 },
+      { name: 'Standing Calf Raise', sets: 4, reps: 20 },
+    ],
+  },
+  {
+    name: 'Home HIIT / Cardio',
+    exercises: [
+      { name: 'Jumping Jacks', sets: 4, duration: 40 },
+      { name: 'High Knees', sets: 4, duration: 30 },
+      { name: 'Burpees', sets: 4, reps: 10 },
+      { name: 'Mountain Climbers', sets: 4, duration: 30 },
+      { name: 'Flutter Kicks', sets: 3, duration: 30 },
+    ],
+  },
 ];
 
 export async function seedStarterTemplates(userId: string | mongoose.Types.ObjectId): Promise<number> {

@@ -5,6 +5,7 @@ export interface ListFilters {
   muscle?: string;
   category?: string;
   level?: string;
+  location?: string;
   search?: string;
 }
 

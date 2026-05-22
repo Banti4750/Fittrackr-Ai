@@ -12,7 +12,7 @@ import { useWorkoutStore } from '../../src/stores/useWorkoutStore';
 import { createWorkout, getLastPerformed, LastPerformedEntry } from '../../src/api/workouts';
 import { listExercises } from '../../src/api/exercises';
 import { createTemplate } from '../../src/api/templates';
-import { Exercise } from '../../src/types';
+import { Exercise, Location } from '../../src/types';
 
 export default function ActiveWorkout() {
   const router = useRouter();
@@ -273,6 +273,11 @@ export default function ActiveWorkout() {
 }
 
 const PICKER_MUSCLES = ['all', 'chest', 'back', 'legs', 'quads', 'shoulders', 'biceps', 'triceps', 'core', 'cardio'];
+const PICKER_LOCATIONS: Array<{ value: Location | 'all'; label: string }> = [
+  { value: 'all', label: 'Anywhere' },
+  { value: 'home', label: '🏠 Home' },
+  { value: 'gym', label: '🏋️ Gym' },
+];
 
 function formatLastPerformed(h: LastPerformedEntry): string {
   const when = h.daysAgo === 0 ? 'today' : h.daysAgo === 1 ? '1d ago' : `${h.daysAgo}d ago`;
@@ -296,9 +301,10 @@ function ExercisePicker({
   const { colors } = useTheme();
   const [search, setSearch] = useState('');
   const [muscle, setMuscle] = useState('all');
+  const [location, setLocation] = useState<Location | 'all'>('all');
   const q = useQuery({
-    queryKey: ['picker-exercises', search, muscle],
-    queryFn: () => listExercises({ search: search || undefined, muscle }),
+    queryKey: ['picker-exercises', search, muscle, location],
+    queryFn: () => listExercises({ search: search || undefined, muscle, location }),
     enabled: open,
   });
   const historyQ = useQuery({
@@ -360,6 +366,34 @@ function ExercisePicker({
                   }}
                 >
                   {m}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 8, paddingVertical: 4 }}
+          style={{ flexGrow: 0, marginBottom: 8 }}
+        >
+          {PICKER_LOCATIONS.map((loc) => {
+            const active = location === loc.value;
+            return (
+              <Pressable
+                key={loc.value}
+                onPress={() => setLocation(loc.value)}
+                style={{
+                  backgroundColor: active ? colors.primary : colors.card,
+                  borderColor: active ? colors.primary : colors.border,
+                  borderWidth: 1,
+                  paddingHorizontal: 14,
+                  paddingVertical: 10,
+                  borderRadius: 999,
+                }}
+              >
+                <Text style={{ color: active ? '#fff' : colors.text, fontWeight: '600' }}>
+                  {loc.label}
                 </Text>
               </Pressable>
             );

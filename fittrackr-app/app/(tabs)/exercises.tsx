@@ -6,21 +6,27 @@ import { Screen } from '../../src/components/Screen';
 import { ExerciseCard } from '../../src/components/ExerciseCard';
 import { useTheme } from '../../src/theme/useTheme';
 import { listExercises } from '../../src/api/exercises';
-import { Exercise, Level } from '../../src/types';
+import { Exercise, Level, Location } from '../../src/types';
 
 const MUSCLES = ['all', 'chest', 'back', 'legs', 'quads', 'shoulders', 'biceps', 'triceps', 'core', 'cardio'];
 const LEVELS: Array<Level | 'all'> = ['all', 'beginner', 'intermediate', 'elite'];
+const LOCATIONS: Array<{ value: Location | 'all'; label: string }> = [
+  { value: 'all', label: 'Anywhere' },
+  { value: 'home', label: '🏠 Home' },
+  { value: 'gym', label: '🏋️ Gym' },
+];
 
 export default function ExercisesTab() {
   const router = useRouter();
   const { colors } = useTheme();
   const [muscle, setMuscle] = useState('all');
   const [level, setLevel] = useState<Level | 'all'>('all');
+  const [location, setLocation] = useState<Location | 'all'>('all');
   const [search, setSearch] = useState('');
 
   const q = useQuery({
-    queryKey: ['exercises', muscle, level, search],
-    queryFn: () => listExercises({ muscle, level, search: search || undefined }),
+    queryKey: ['exercises', muscle, level, location, search],
+    queryFn: () => listExercises({ muscle, level, location, search: search || undefined }),
   });
 
   const renderItem = useCallback(
@@ -58,6 +64,16 @@ export default function ExercisesTab() {
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingRight: 8 }}>
         {LEVELS.map((l) => (
           <Chip key={l} label={l} active={level === l} onPress={() => setLevel(l)} />
+        ))}
+      </ScrollView>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingRight: 8 }}>
+        {LOCATIONS.map((loc) => (
+          <Chip
+            key={loc.value}
+            label={loc.label}
+            active={location === loc.value}
+            onPress={() => setLocation(loc.value)}
+          />
         ))}
       </ScrollView>
       {q.data ? (

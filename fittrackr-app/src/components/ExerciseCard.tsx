@@ -101,7 +101,20 @@ export function ExerciseCard({
           style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 70 }}
           pointerEvents="none"
         />
-        <View style={{ position: 'absolute', top: 10, right: 10 }}>
+        <View style={{ position: 'absolute', top: 10, right: 10, flexDirection: 'row', gap: 6 }}>
+          {exercise.location === 'home' ? (
+            <View
+              style={{
+                backgroundColor: 'rgba(10,10,10,0.7)',
+                borderRadius: 999,
+                paddingHorizontal: 9,
+                paddingVertical: 4,
+                justifyContent: 'center',
+              }}
+            >
+              <Text style={{ color: '#fff', fontSize: 11, fontWeight: '700' }}>🏠 Home</Text>
+            </View>
+          ) : null}
           <LevelBadge level={exercise.difficulty} />
         </View>
         <View style={{ position: 'absolute', left: 12, right: 12, bottom: 10 }}>
