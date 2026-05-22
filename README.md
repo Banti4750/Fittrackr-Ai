@@ -4,7 +4,7 @@ An AI-powered fitness tracking app. Log workouts, track personal records, see pr
 
 🌐 Visit Page: https://staging.d3ul7t1mvo87vv.amplifyapp.com/
 
-🌐 Download App: https://expo.dev/accounts/bantik4750/projects/fittrackr/builds/dbd84479-9727-4466-b9aa-3101f3068114
+🌐 Download App: https://expo.dev/artifacts/eas/i4Bhr3tCHKLuVbqnxHYXWL.apk
 
 ```
 /fittrackr-backend     Node.js + Express + MongoDB + Mongoose + JWT
