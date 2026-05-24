@@ -72,45 +72,6 @@ npm run dev        # starts on http://localhost:5000
 | `CLOUDINARY_API_KEY`    | no\*     | "                                          |
 | `CLOUDINARY_API_SECRET` | no\*     | "                                          |
 
-### API reference
-
-| Method | Path                             | Auth | Description                               |
-| ------ | -------------------------------- | ---- | ----------------------------------------- | --- | ---- |
-| POST   | `/api/auth/register`             | —    | Create account, returns `{user, token}`   |
-| POST   | `/api/auth/login`                | —    | Returns `{user, token}`                   |
-| GET    | `/api/auth/me`                   | yes  | Current user                              |
-| GET    | `/api/exercises`                 | —    | `?muscle=&category=&level=&search=`       |
-| GET    | `/api/exercises/:id`             | —    | Exercise detail                           |
-| POST   | `/api/workouts`                  | yes  | Create session (auto-detects PRs)         |
-| GET    | `/api/workouts`                  | yes  | `?startDate=&endDate=&page=&limit=`       |
-| GET    | `/api/workouts/:id`              | yes  | Workout detail                            |
-| PUT    | `/api/workouts/:id`              | yes  | Update                                    |
-| DELETE | `/api/workouts/:id`              | yes  | Delete                                    |
-| GET    | `/api/templates`                 | yes  | List saved workout templates              |
-| POST   | `/api/templates`                 | yes  | Create a template                         |
-| POST   | `/api/templates/install-starters`| yes  | Add the built-in starter routines         |
-| PUT    | `/api/templates/:id`             | yes  | Update                                    |
-| DELETE | `/api/templates/:id`             | yes  | Delete                                    |
-| GET    | `/api/progress/volume`           | yes  | `?exercise=&range=7d                      | 30d | 90d` |
-| GET    | `/api/progress/personal-bests`   | yes  | List of PRs per exercise                  |
-| GET    | `/api/progress/frequency`        | yes  | Workouts per week                         |
-| GET    | `/api/progress/muscle-breakdown` | yes  | Sets per muscle group                     |
-| POST   | `/api/bodystats`                 | yes  | Create entry                              |
-| GET    | `/api/bodystats`                 | yes  | Last 30                                   |
-| GET    | `/api/bodystats/trend`           | yes  | Time series                               |
-| GET    | `/api/streaks`                   | yes  | Streak + 90-day heatmap                   |
-| GET    | `/api/users/profile`             | yes  | Profile                                   |
-| PUT    | `/api/users/profile`             | yes  | Update                                    |
-| PUT    | `/api/users/level`               | yes  | Set level                                 |
-| POST   | `/api/ai/insights`               | yes  | Generate fresh insights (AI call)         |
-| GET    | `/api/ai/insights/latest`        | yes  | Recent insights                           |
-| GET    | `/api/calories/today`            | yes  | Today's burned-calorie estimate           |
-| GET    | `/api/calories/weekly`           | yes  | Last 7 days                               |
-| GET    | `/api/calories/monthly`          | yes  | Last 30 days                              |
-| GET    | `/api/calories/summary`          | yes  | Aggregate summary                         |
-| GET    | `/api/calories/sessions`         | yes  | Per-session breakdown                     |
-| POST   | `/api/upload/photo`              | yes  | multipart `file` — returns Cloudinary URL |
-
 ### How AI insights work
 
 `POST /api/ai/insights` aggregates the last 30 days of `WorkoutSession` data per exercise:
