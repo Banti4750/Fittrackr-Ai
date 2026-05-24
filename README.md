@@ -21,7 +21,9 @@ An AI-powered fitness tracking app. Log workouts, track personal records, see pr
 - Exercise library (85+ seeded exercises) — filter by muscle/category/level, search
 - Per-exercise detail (image, instructions, tips, YouTube link, history chart)
 - Progress: volume line chart, frequency bar chart, PR list, muscle breakdown
-- AI insights powered by Claude (or OpenAI) with plateau / overtraining / progressive overload detection
+- Reusable workout templates (build your own or install starter routines)
+- Calorie tracking with daily / weekly / monthly summaries
+- AI insights powered by Gemini, Claude, or OpenAI with plateau / overtraining / progressive overload detection
 - Streak tracker with calendar heatmap and milestone badges
 - Body stats (weight, body fat, measurements, BMI) with progress photos and side-by-side comparison
 - Light / dark mode (system-following)
@@ -32,7 +34,7 @@ An AI-powered fitness tracking app. Log workouts, track personal records, see pr
 
 - Node 18+
 - MongoDB running locally (or an Atlas URI)
-- An Anthropic Claude API key (recommended) or OpenAI API key — optional; without one the AI endpoint falls back to a deterministic local analysis
+- An AI provider key — Gemini, Claude, or OpenAI (all optional; without one the AI endpoint falls back to a deterministic local analysis). Priority is Gemini → Claude → OpenAI
 - A Cloudinary account (optional, required for photo uploads)
 - Expo CLI: `npm i -g expo` (or use `npx`)
 
@@ -43,7 +45,7 @@ An AI-powered fitness tracking app. Log workouts, track personal records, see pr
 ```bash
 cd fittrackr-backend
 cp .env.example .env
-# Edit .env: set MONGODB_URI, JWT_SECRET, CLAUDE_API_KEY (or OPENAI_API_KEY), Cloudinary keys
+# Edit .env: set MONGODB_URI, JWT_SECRET, an AI key (GEMINI/CLAUDE/OPENAI), Cloudinary keys
 
 npm install
 npm run seed       # populate ~85 exercises
@@ -60,9 +62,11 @@ npm run dev        # starts on http://localhost:5000
 | `MONGODB_URI`           | yes      | e.g. `mongodb://127.0.0.1:27017/fittrackr` |
 | `JWT_SECRET`            | yes      | long random string                         |
 | `JWT_EXPIRES_IN`        | no       | default `30d`                              |
-| `CLAUDE_API_KEY`        | no       | Claude is preferred when set               |
+| `GEMINI_API_KEY`        | no       | highest-priority AI provider when set      |
+| `GEMINI_MODEL`          | no       | default `gemini-2.0-flash`                 |
+| `CLAUDE_API_KEY`        | no       | used when Gemini is unset                  |
 | `CLAUDE_MODEL`          | no       | default `claude-sonnet-4-20250514`         |
-| `OPENAI_API_KEY`        | no       | fallback provider                          |
+| `OPENAI_API_KEY`        | no       | final fallback provider                    |
 | `OPENAI_MODEL`          | no       | default `gpt-4o`                           |
 | `CLOUDINARY_CLOUD_NAME` | no\*     | required if you use photo upload           |
 | `CLOUDINARY_API_KEY`    | no\*     | "                                          |
@@ -82,6 +86,11 @@ npm run dev        # starts on http://localhost:5000
 | GET    | `/api/workouts/:id`              | yes  | Workout detail                            |
 | PUT    | `/api/workouts/:id`              | yes  | Update                                    |
 | DELETE | `/api/workouts/:id`              | yes  | Delete                                    |
+| GET    | `/api/templates`                 | yes  | List saved workout templates              |
+| POST   | `/api/templates`                 | yes  | Create a template                         |
+| POST   | `/api/templates/install-starters`| yes  | Add the built-in starter routines         |
+| PUT    | `/api/templates/:id`             | yes  | Update                                    |
+| DELETE | `/api/templates/:id`             | yes  | Delete                                    |
 | GET    | `/api/progress/volume`           | yes  | `?exercise=&range=7d                      | 30d | 90d` |
 | GET    | `/api/progress/personal-bests`   | yes  | List of PRs per exercise                  |
 | GET    | `/api/progress/frequency`        | yes  | Workouts per week                         |
@@ -95,6 +104,11 @@ npm run dev        # starts on http://localhost:5000
 | PUT    | `/api/users/level`               | yes  | Set level                                 |
 | POST   | `/api/ai/insights`               | yes  | Generate fresh insights (AI call)         |
 | GET    | `/api/ai/insights/latest`        | yes  | Recent insights                           |
+| GET    | `/api/calories/today`            | yes  | Today's burned-calorie estimate           |
+| GET    | `/api/calories/weekly`           | yes  | Last 7 days                               |
+| GET    | `/api/calories/monthly`          | yes  | Last 30 days                              |
+| GET    | `/api/calories/summary`          | yes  | Aggregate summary                         |
+| GET    | `/api/calories/sessions`         | yes  | Per-session breakdown                     |
 | POST   | `/api/upload/photo`              | yes  | multipart `file` — returns Cloudinary URL |
 
 ### How AI insights work
@@ -108,7 +122,7 @@ npm run dev        # starts on http://localhost:5000
 - overtraining detection (7+ consecutive workout days)
 - progressive overload (volume rising over time)
 
-It builds a structured prompt, calls Claude (or OpenAI), parses the JSON response, and caches the result as an `AIInsight` document with a 24-hour TTL. If both API keys are missing or the call fails, it returns a deterministic local fallback so the UI always has data to render.
+It builds a structured prompt, calls the configured provider (Gemini → Claude → OpenAI, in that order of priority), parses the JSON response, and caches the result as an `AIInsight` document with a 24-hour TTL. If no API key is set or the call fails, it returns a deterministic local fallback so the UI always has data to render.
 
 ---
 
@@ -178,3 +192,21 @@ src/
 - Exercise images are seeded with deterministic placeholder URLs (`picsum.photos`); swap for Cloudinary uploads when you have them.
 - Video URLs point at YouTube search results for the exercise so the link always works.
 - If you don't have Cloudinary configured, the **+ photo** button on Body Stats will surface a configuration error — everything else works without it.
+
+---
+
+## Contributing
+
+Contributions are welcome — bug fixes, features, docs, anything. Start with **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full local-setup, branching, and pull-request workflow.
+
+The short version:
+
+1. Fork and clone the repo.
+2. Set up the backend and app (see sections 1 and 2 above).
+3. Create a branch: `git checkout -b feat/your-thing`.
+4. Make your change. Run `npm run typecheck` in both `fittrackr-backend` and `fittrackr-app` before pushing — CI runs the same checks (plus `npm run build` on the backend) on every PR.
+5. Open a pull request against `main` with a clear description.
+
+## License
+
+Released under the [MIT License](LICENSE).
