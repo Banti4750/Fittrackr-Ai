@@ -8,6 +8,8 @@ import { PersonalBestBadge } from '../../src/components/PersonalBestBadge';
 import { useTheme } from '../../src/theme/useTheme';
 import { deleteWorkout, getWorkout } from '../../src/api/workouts';
 import { formatDate, formatDuration, formatVolume } from '../../src/utils/format';
+import { useWeightUnit } from '../../src/stores/useAuthStore';
+import { formatWeight } from '../../src/utils/units';
 import { Exercise } from '../../src/types';
 
 export default function WorkoutDetail() {
@@ -15,6 +17,7 @@ export default function WorkoutDetail() {
   const router = useRouter();
   const qc = useQueryClient();
   const { colors } = useTheme();
+  const unit = useWeightUnit();
 
   const q = useQuery({ queryKey: ['workout', id], queryFn: () => getWorkout(id!) });
   const del = useMutation({
@@ -37,7 +40,7 @@ export default function WorkoutDetail() {
 
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <Stat label="Exercises" value={String(s.exercises.length)} />
-        <Stat label="Volume" value={formatVolume(s.totalVolume)} />
+        <Stat label="Volume" value={formatVolume(s.totalVolume, unit)} />
         <Stat label="Duration" value={formatDuration(s.totalDuration)} />
       </View>
 
@@ -65,7 +68,7 @@ export default function WorkoutDetail() {
               <View key={j} style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={{ color: colors.textMuted }}>Set {j + 1}</Text>
                 <Text style={{ color: colors.text }}>
-                  {set.weight != null ? `${set.weight} kg × ${set.reps ?? 0}` : `${set.reps ?? 0} reps`}
+                  {set.weight != null ? `${formatWeight(set.weight, unit)} × ${set.reps ?? 0}` : `${set.reps ?? 0} reps`}
                   {set.isPersonalBest ? '  🏆' : ''}
                 </Text>
               </View>

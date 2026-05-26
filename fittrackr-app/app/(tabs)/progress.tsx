@@ -6,13 +6,16 @@ import { Screen } from '../../src/components/Screen';
 import { ProgressChart } from '../../src/components/ProgressChart';
 import { useTheme } from '../../src/theme/useTheme';
 import { getVolume, getFrequency, getPersonalBests, getMuscleBreakdown } from '../../src/api/progress';
-import { formatDate, formatVolume } from '../../src/utils/format';
+import { formatDate } from '../../src/utils/format';
+import { useWeightUnit } from '../../src/stores/useAuthStore';
+import { LB_PER_KG, formatWeight, unitLabel } from '../../src/utils/units';
 
 type Tab = 'volume' | 'frequency' | 'body' | 'prs';
 
 export default function Progress() {
   const { colors } = useTheme();
   const router = useRouter();
+  const unit = useWeightUnit();
   const [tab, setTab] = useState<Tab>('volume');
 
   const volume = useQuery({ queryKey: ['volume', '30d'], queryFn: () => getVolume({ range: '30d' }) });
@@ -46,8 +49,11 @@ export default function Progress() {
       {tab === 'volume' && (
         <View style={{ backgroundColor: colors.card, padding: 14, borderRadius: 14, borderWidth: 1, borderColor: colors.border }}>
           <ProgressChart
-            title="Total volume (last 30 days)"
-            data={(volume.data ?? []).map((p) => ({ label: formatDate(p.date), value: Math.round(p.volume) }))}
+            title={`Total volume (last 30 days, ${unitLabel(unit)})`}
+            data={(volume.data ?? []).map((p) => ({
+              label: formatDate(p.date),
+              value: Math.round(unit === 'lbs' ? p.volume * LB_PER_KG : p.volume),
+            }))}
             type="line"
           />
           <Text style={{ color: colors.textMuted, marginTop: 8, fontSize: 12 }}>
@@ -110,7 +116,7 @@ export default function Progress() {
                   <Text style={{ color: colors.textMuted, fontSize: 12 }}>{formatDate(p.date)}</Text>
                 </View>
                 <Text style={{ color: colors.primary, fontWeight: '700' }}>
-                  {p.weight ? `${p.weight} kg × ${p.reps}` : `${p.reps} reps`}
+                  {p.weight ? `${formatWeight(p.weight, unit)} × ${p.reps}` : `${p.reps} reps`}
                 </Text>
               </View>
             ))

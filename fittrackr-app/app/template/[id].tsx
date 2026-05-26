@@ -8,6 +8,8 @@ import { useTheme } from '../../src/theme/useTheme';
 import { listTemplates, updateTemplate } from '../../src/api/templates';
 import { listExercises } from '../../src/api/exercises';
 import { Exercise, Location, WorkoutTemplate } from '../../src/types';
+import { useWeightUnit } from '../../src/stores/useAuthStore';
+import { fromKg, toKg, unitLabel } from '../../src/utils/units';
 
 interface DraftRow {
   exercise: Exercise;
@@ -28,6 +30,7 @@ export default function EditTemplate() {
   const router = useRouter();
   const qc = useQueryClient();
   const { colors } = useTheme();
+  const unit = useWeightUnit();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const templates = useQuery({ queryKey: ['templates'], queryFn: listTemplates });
@@ -178,10 +181,14 @@ export default function EditTemplate() {
                 }
               />
               <NumField
-                label="Weight (kg)"
-                value={r.weight}
+                label={`Weight (${unitLabel(unit)})`}
+                value={r.weight != null ? fromKg(r.weight, unit) : undefined}
                 onChange={(v) =>
-                  setRows(rows.map((x, i) => (i === idx ? { ...x, weight: v } : x)))
+                  setRows(
+                    rows.map((x, i) =>
+                      i === idx ? { ...x, weight: v == null ? undefined : toKg(v, unit) } : x
+                    )
+                  )
                 }
               />
             </View>

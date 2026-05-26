@@ -1,3 +1,6 @@
+import { WeightUnit } from '../types';
+import { LB_PER_KG, unitLabel } from './units';
+
 export function formatDate(iso: string | Date): string {
   const d = new Date(iso);
   return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
@@ -8,9 +11,11 @@ export function formatDateTime(iso: string | Date): string {
   return d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 }
 
-export function formatVolume(v: number): string {
-  if (v >= 1000) return `${(v / 1000).toFixed(1)}k kg`;
-  return `${Math.round(v)} kg`;
+export function formatVolume(v: number, unit: WeightUnit = 'kg'): string {
+  const value = unit === 'lbs' ? v * LB_PER_KG : v;
+  const label = unitLabel(unit);
+  if (value >= 1000) return `${(value / 1000).toFixed(1)}k ${label}`;
+  return `${Math.round(value)} ${label}`;
 }
 
 export function formatDuration(minutes: number): string {

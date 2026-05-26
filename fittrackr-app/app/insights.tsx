@@ -8,9 +8,12 @@ import { Logo } from '../src/components/Logo';
 import { useTheme } from '../src/theme/useTheme';
 import { generateInsights, latestInsights } from '../src/api/ai';
 import { formatDateTime } from '../src/utils/format';
+import { useWeightUnit } from '../src/stores/useAuthStore';
+import { formatWeight } from '../src/utils/units';
 
 export default function Insights() {
   const { colors } = useTheme();
+  const unit = useWeightUnit();
   const qc = useQueryClient();
   const list = useQuery({ queryKey: ['insights', 'latest'], queryFn: latestInsights });
   const gen = useMutation({
@@ -102,7 +105,7 @@ export default function Insights() {
                 <Text style={{ color: colors.text }}>{x.name}</Text>
                 <Text style={{ color: colors.textMuted }}>
                   {x.sets} × {x.reps}
-                  {x.weight ? ` @ ${x.weight}kg` : ''}
+                  {x.weight ? ` @ ${formatWeight(x.weight, unit)}` : ''}
                 </Text>
               </View>
             ))}

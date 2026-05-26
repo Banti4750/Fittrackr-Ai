@@ -2,6 +2,8 @@ import React from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { useTheme } from '../theme/useTheme';
 import { WorkoutSet } from '../types';
+import { useWeightUnit } from '../stores/useAuthStore';
+import { fromKg, toKg, unitLabel } from '../utils/units';
 import { PersonalBestBadge } from './PersonalBestBadge';
 
 interface Props {
@@ -15,6 +17,7 @@ interface Props {
 
 export function SetRow({ index, set, previous, onChange, onRemove, onComplete }: Props) {
   const { colors } = useTheme();
+  const unit = useWeightUnit();
   return (
     <View
       style={{
@@ -41,16 +44,18 @@ export function SetRow({ index, set, previous, onChange, onRemove, onComplete }:
       <View style={{ flex: 1 }}>
         <Text style={{ color: colors.textMuted, fontSize: 11, marginBottom: 2 }}>
           {previous?.reps != null && previous?.weight != null
-            ? `Last: ${previous.weight}kg × ${previous.reps}`
+            ? `Last: ${fromKg(previous.weight, unit)}${unitLabel(unit)} × ${previous.reps}`
             : ' '}
         </Text>
         <View style={{ flexDirection: 'row', gap: 8 }}>
           <TextInput
-            placeholder="kg"
+            placeholder={unitLabel(unit)}
             placeholderTextColor={colors.textMuted}
             keyboardType="decimal-pad"
-            value={set.weight != null ? String(set.weight) : ''}
-            onChangeText={(t) => onChange({ weight: t === '' ? undefined : parseFloat(t) })}
+            value={set.weight != null ? String(fromKg(set.weight, unit)) : ''}
+            onChangeText={(t) =>
+              onChange({ weight: t === '' ? undefined : toKg(parseFloat(t), unit) })
+            }
             style={{
               flex: 1,
               backgroundColor: colors.bg,

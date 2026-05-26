@@ -3,9 +3,11 @@ import { Pressable, Text, View } from 'react-native';
 import { WorkoutSession } from '../types';
 import { useTheme } from '../theme/useTheme';
 import { formatDate, formatDuration, formatVolume } from '../utils/format';
+import { useWeightUnit } from '../stores/useAuthStore';
 
 export function WorkoutCard({ session, onPress }: { session: WorkoutSession; onPress?: () => void }) {
   const { colors } = useTheme();
+  const unit = useWeightUnit();
   return (
     <Pressable
       onPress={onPress}
@@ -27,7 +29,7 @@ export function WorkoutCard({ session, onPress }: { session: WorkoutSession; onP
       </View>
       <View style={{ flexDirection: 'row', gap: 14, marginTop: 8 }}>
         <Stat label="Exercises" value={String(session.exercises.length)} />
-        <Stat label="Volume" value={formatVolume(session.totalVolume)} />
+        <Stat label="Volume" value={formatVolume(session.totalVolume, unit)} />
         <Stat label="Duration" value={formatDuration(session.totalDuration)} />
       </View>
     </Pressable>

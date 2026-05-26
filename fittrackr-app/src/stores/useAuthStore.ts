@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
-import { User } from '../types';
+import { User, WeightUnit } from '../types';
 import * as authApi from '../api/auth';
 import { setAuthToken } from '../api/client';
 
@@ -96,3 +96,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     }
   },
 }));
+
+/** The user's preferred weight unit, defaulting to kg. */
+export function useWeightUnit(): WeightUnit {
+  return useAuthStore((s) => s.user?.weightUnit ?? 'kg');
+}

@@ -2,6 +2,7 @@ export type Level = 'beginner' | 'intermediate' | 'elite';
 export type Category = 'strength' | 'cardio' | 'flexibility' | 'HIIT';
 export type Location = 'home' | 'gym';
 export type Mood = 'great' | 'okay' | 'tired';
+export type WeightUnit = 'kg' | 'lbs';
 
 export interface User {
   _id: string;
@@ -14,6 +15,7 @@ export interface User {
   gender?: string;
   goals: string[];
   profilePhoto?: string;
+  weightUnit?: WeightUnit;
   streakCount: number;
   lastWorkoutDate?: string;
   dailyCalorieGoal?: number;

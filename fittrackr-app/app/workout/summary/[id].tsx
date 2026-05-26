@@ -8,11 +8,14 @@ import { Logo } from '../../../src/components/Logo';
 import { useTheme } from '../../../src/theme/useTheme';
 import { getWorkout } from '../../../src/api/workouts';
 import { formatVolume } from '../../../src/utils/format';
+import { useWeightUnit } from '../../../src/stores/useAuthStore';
+import { formatWeight } from '../../../src/utils/units';
 
 export default function WorkoutSummary() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const { colors } = useTheme();
+  const unit = useWeightUnit();
 
   const q = useQuery({
     queryKey: ['workout', id, 'summary'],
@@ -37,7 +40,7 @@ export default function WorkoutSummary() {
   const onShare = async () => {
     const lines = [
       `🔥 Just crushed a workout on FitTrackr AI`,
-      `${s.caloriesBurned} kcal burned · ${formatVolume(s.totalVolume)} volume`,
+      `${s.caloriesBurned} kcal burned · ${formatVolume(s.totalVolume, unit)} volume`,
       `${s.exercises.length} exercises · ${totalSets} sets · ${s.totalDuration}min`,
       prs.length > 0 ? `🏆 ${prs.length} new personal best${prs.length > 1 ? 's' : ''}!` : '',
     ].filter(Boolean);
@@ -86,7 +89,7 @@ export default function WorkoutSummary() {
       {/* Stats grid */}
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <SummaryTile label="Time" value={`${s.totalDuration}`} unit="min" />
-        <SummaryTile label="Volume" value={formatVolume(s.totalVolume)} unit="" />
+        <SummaryTile label="Volume" value={formatVolume(s.totalVolume, unit)} unit="" />
         <SummaryTile label="Exercises" value={String(s.exercises.length)} unit="" />
         <SummaryTile label="Sets" value={String(totalSets)} unit="" />
       </View>
@@ -117,7 +120,7 @@ export default function WorkoutSummary() {
               >
                 <Text style={{ color: colors.text, fontWeight: '700' }}>{name}</Text>
                 <Text style={{ color: colors.primary, fontWeight: '700' }}>
-                  {bestSet?.weight ? `${bestSet.weight}kg × ${bestSet.reps}` : `${bestSet?.reps ?? 0} reps`}
+                  {bestSet?.weight ? `${formatWeight(bestSet.weight, unit)} × ${bestSet.reps}` : `${bestSet?.reps ?? 0} reps`}
                 </Text>
               </View>
             );

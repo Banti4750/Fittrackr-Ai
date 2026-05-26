@@ -21,6 +21,7 @@ export default function Home() {
   const router = useRouter();
   const { colors } = useTheme();
   const user = useAuthStore((s) => s.user);
+  const unit = user?.weightUnit ?? 'kg';
 
   const workouts = useQuery({ queryKey: ['workouts', 'home'], queryFn: () => listWorkouts({ page: 1 }) });
   const insights = useQuery({ queryKey: ['insights', 'latest'], queryFn: latestInsights });
@@ -58,7 +59,7 @@ export default function Home() {
 
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <StatTile label="Workouts" value={String(weekSessions.length)} sub="this week" />
-        <StatTile label="Volume" value={formatVolume(weekVolume)} sub="this week" />
+        <StatTile label="Volume" value={formatVolume(weekVolume, unit)} sub="this week" />
         <StatTile
           label="Streak"
           value={String(streak.data?.streak?.currentStreak ?? 0)}

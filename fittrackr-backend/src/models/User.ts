@@ -2,6 +2,7 @@ import { Schema, model, Document, Types } from 'mongoose';
 
 export type Level = 'beginner' | 'intermediate' | 'elite';
 export type Gender = 'male' | 'female' | 'other' | 'prefer_not_to_say';
+export type WeightUnit = 'kg' | 'lbs';
 
 export interface IUser extends Document {
   _id: Types.ObjectId;
@@ -15,6 +16,8 @@ export interface IUser extends Document {
   gender?: Gender;
   goals: string[];
   profilePhoto?: string;
+  // Display preference only — all stored weights are canonical kilograms.
+  weightUnit: WeightUnit;
   streakCount: number;
   lastWorkoutDate?: Date;
   dailyCalorieGoal: number;
@@ -48,6 +51,7 @@ const userSchema = new Schema<IUser>(
     },
     goals: { type: [String], default: [] },
     profilePhoto: String,
+    weightUnit: { type: String, enum: ['kg', 'lbs'], default: 'kg' },
     streakCount: { type: Number, default: 0 },
     lastWorkoutDate: Date,
     dailyCalorieGoal: { type: Number, default: 400 },

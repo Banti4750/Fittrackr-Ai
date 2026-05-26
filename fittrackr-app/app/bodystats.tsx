@@ -11,10 +11,13 @@ import { useTheme } from '../src/theme/useTheme';
 import { createBodyStats, getBodyStatsTrend, listBodyStats } from '../src/api/bodystats';
 import { api } from '../src/api/client';
 import { formatDate } from '../src/utils/format';
+import { useWeightUnit } from '../src/stores/useAuthStore';
+import { fromKg, toKg, unitLabel } from '../src/utils/units';
 import { BodyStatsEntry } from '../src/types';
 
 export default function BodyStatsScreen() {
   const { colors } = useTheme();
+  const unit = useWeightUnit();
   const qc = useQueryClient();
   const trend = useQuery({ queryKey: ['bodystats-trend'], queryFn: getBodyStatsTrend });
   const list = useQuery({ queryKey: ['bodystats-list'], queryFn: listBodyStats });
@@ -61,7 +64,7 @@ export default function BodyStatsScreen() {
 
   const onSave = () => {
     const payload = {
-      weight: weight ? parseFloat(weight) : undefined,
+      weight: weight ? toKg(parseFloat(weight), unit) : undefined,
       bodyFat: bodyFat ? parseFloat(bodyFat) : undefined,
       measurements: {
         chest: chest ? parseFloat(chest) : undefined,
@@ -108,8 +111,8 @@ export default function BodyStatsScreen() {
       <View style={{ flexDirection: 'row', gap: 10 }}>
         <BodyStatCard
           label="Weight"
-          value={latest?.weight ?? '—'}
-          unit="kg"
+          value={latest?.weight != null ? fromKg(latest.weight, unit) : '—'}
+          unit={unitLabel(unit)}
           trend={weightTrendDir as 'up' | 'down' | 'flat'}
         />
         <BodyStatCard label="BMI" value={latest?.bmi ?? '—'} />
@@ -128,7 +131,7 @@ export default function BodyStatsScreen() {
       >
         <Text style={{ color: colors.text, fontWeight: '700' }}>New entry</Text>
         <Row>
-          <Field label="Weight (kg)" value={weight} onChangeText={setWeight} />
+          <Field label={`Weight (${unitLabel(unit)})`} value={weight} onChangeText={setWeight} />
           <Field label="Body fat (%)" value={bodyFat} onChangeText={setBodyFat} />
         </Row>
         <Row>
@@ -171,7 +174,7 @@ export default function BodyStatsScreen() {
           title="Weight trend"
           data={(trend.data ?? [])
             .filter((p) => p.weight != null)
-            .map((p) => ({ label: formatDate(p.date), value: p.weight! }))}
+            .map((p) => ({ label: formatDate(p.date), value: fromKg(p.weight!, unit) }))}
           type="line"
         />
       </View>
@@ -268,6 +271,7 @@ function PhotoViewer({
   onChange: (i: number) => void;
 }) {
   const { colors } = useTheme();
+  const unit = useWeightUnit();
   const { width, height } = useWindowDimensions();
   if (index == null) return null;
   const current = photos[index];
@@ -275,7 +279,7 @@ function PhotoViewer({
   const { entry } = current;
   const m = entry.measurements ?? {};
   const stats: Array<[string, string]> = [];
-  if (entry.weight != null) stats.push(['Weight', `${entry.weight} kg`]);
+  if (entry.weight != null) stats.push(['Weight', `${fromKg(entry.weight, unit)} ${unitLabel(unit)}`]);
   if (entry.bmi != null) stats.push(['BMI', `${entry.bmi}`]);
   if (entry.bodyFat != null) stats.push(['Body fat', `${entry.bodyFat}%`]);
   if (m.chest != null) stats.push(['Chest', `${m.chest} cm`]);

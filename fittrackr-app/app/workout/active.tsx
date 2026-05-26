@@ -12,7 +12,9 @@ import { useWorkoutStore } from '../../src/stores/useWorkoutStore';
 import { createWorkout, getLastPerformed, LastPerformedEntry } from '../../src/api/workouts';
 import { listExercises } from '../../src/api/exercises';
 import { createTemplate } from '../../src/api/templates';
-import { Exercise, Location } from '../../src/types';
+import { Exercise, Location, WeightUnit } from '../../src/types';
+import { useWeightUnit } from '../../src/stores/useAuthStore';
+import { fromKg, unitLabel } from '../../src/utils/units';
 
 export default function ActiveWorkout() {
   const router = useRouter();
@@ -279,11 +281,12 @@ const PICKER_LOCATIONS: Array<{ value: Location | 'all'; label: string }> = [
   { value: 'gym', label: '🏋️ Gym' },
 ];
 
-function formatLastPerformed(h: LastPerformedEntry): string {
+function formatLastPerformed(h: LastPerformedEntry, unit: WeightUnit): string {
   const when = h.daysAgo === 0 ? 'today' : h.daysAgo === 1 ? '1d ago' : `${h.daysAgo}d ago`;
   const b = h.bestSet;
-  if (b?.weight != null && b?.reps != null) return `Last: ${when} · ${b.weight}kg × ${b.reps}`;
-  if (b?.weight != null) return `Last: ${when} · ${b.weight}kg`;
+  const w = b?.weight != null ? `${fromKg(b.weight, unit)}${unitLabel(unit)}` : '';
+  if (b?.weight != null && b?.reps != null) return `Last: ${when} · ${w} × ${b.reps}`;
+  if (b?.weight != null) return `Last: ${when} · ${w}`;
   if (b?.reps != null) return `Last: ${when} · ${b.reps} reps`;
   if (b?.duration != null) return `Last: ${when} · ${b.duration}s`;
   return `Last: ${when}`;
@@ -299,6 +302,7 @@ function ExercisePicker({
   onPick: (e: Exercise) => void;
 }) {
   const { colors } = useTheme();
+  const unit = useWeightUnit();
   const [search, setSearch] = useState('');
   const [muscle, setMuscle] = useState('all');
   const [location, setLocation] = useState<Location | 'all'>('all');
@@ -424,7 +428,7 @@ function ExercisePicker({
                   </Text>
                   {h ? (
                     <Text style={{ color: colors.primary, fontSize: 12, marginTop: 4, fontWeight: '600' }}>
-                      {formatLastPerformed(h)}
+                      {formatLastPerformed(h, unit)}
                     </Text>
                   ) : null}
                 </Pressable>

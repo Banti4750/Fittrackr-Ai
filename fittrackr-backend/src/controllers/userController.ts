@@ -14,6 +14,7 @@ const profileSchema = z.object({
   goals: z.array(z.string()).optional(),
   profilePhoto: z.string().url().optional(),
   dailyCalorieGoal: z.number().int().min(50).max(5000).optional(),
+  weightUnit: z.enum(['kg', 'lbs']).optional(),
 });
 
 const levelSchema = z.object({
