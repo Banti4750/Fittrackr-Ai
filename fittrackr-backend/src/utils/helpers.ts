@@ -70,17 +70,58 @@ export function estimateSetSeconds(set: ISet): number {
 }
 
 /**
- * MET-based calorie burn for a single exercise:
+ * MET-based calorie burn for a single exercise over a known span of time:
  *   calories = MET × bodyweight(kg) × hours
  */
 export function calcExerciseCalories(opts: {
-  sets: ISet[];
   met: number;
   bodyWeightKg: number;
+  minutes: number;
 }): number {
-  const totalSeconds = opts.sets.reduce((sum, s) => sum + estimateSetSeconds(s), 0);
-  const hours = totalSeconds / 3600;
+  const hours = opts.minutes / 60;
   return Math.round(opts.met * opts.bodyWeightKg * hours * 10) / 10;
+}
+
+/**
+ * Distributes a session's calorie burn across its exercises.
+ *
+ * A strength MET (~5) already represents the average intensity of a whole
+ * training session *including rest between sets*, so calories must be applied
+ * to the real session duration — not just the few seconds spent lifting. We
+ * split the session's total minutes across exercises in proportion to each
+ * one's active work (reps/duration), then apply that exercise's own MET.
+ */
+export function calcSessionCalories(opts: {
+  exercises: { met: number; sets: ISet[] }[];
+  bodyWeightKg: number;
+  totalMinutes: number;
+}): { perExercise: number[]; total: number } {
+  const workSeconds = opts.exercises.map((ex) =>
+    ex.sets.reduce((sum, s) => sum + estimateSetSeconds(s), 0),
+  );
+  const totalWork = workSeconds.reduce((a, b) => a + b, 0);
+
+  // Without a real duration (or no logged work to weight by) fall back to the
+  // raw active-work estimate so we never divide by zero.
+  if (!opts.totalMinutes || opts.totalMinutes <= 0 || totalWork <= 0) {
+    const perExercise = opts.exercises.map((ex, i) =>
+      calcExerciseCalories({
+        met: ex.met,
+        bodyWeightKg: opts.bodyWeightKg,
+        minutes: workSeconds[i] / 60,
+      }),
+    );
+    return { perExercise, total: Math.round(perExercise.reduce((a, b) => a + b, 0)) };
+  }
+
+  const perExercise = opts.exercises.map((ex, i) =>
+    calcExerciseCalories({
+      met: ex.met,
+      bodyWeightKg: opts.bodyWeightKg,
+      minutes: opts.totalMinutes * (workSeconds[i] / totalWork),
+    }),
+  );
+  return { perExercise, total: Math.round(perExercise.reduce((a, b) => a + b, 0)) };
 }
 
 export function startOfDay(d: Date): Date {

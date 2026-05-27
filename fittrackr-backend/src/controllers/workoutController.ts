@@ -10,7 +10,7 @@ import { HttpError } from '../middleware/errorHandler';
 import {
   calcVolume,
   calcDuration,
-  calcExerciseCalories,
+  calcSessionCalories,
   metForCategory,
   bestSetValue,
   FALLBACK_BODYWEIGHT_KG,
@@ -90,17 +90,18 @@ export const create = asyncHandler(async (req: AuthRequest, res: Response) => {
     metByExId.set(ex._id.toString(), ex.metValue ?? metForCategory(ex.category));
   }
 
-  const caloriesPerExercise = exercises.map((ex) => ({
-    exerciseId: ex.exerciseId,
-    calories: calcExerciseCalories({
-      sets: ex.sets,
+  const { perExercise, total: caloriesBurned } = calcSessionCalories({
+    exercises: exercises.map((ex) => ({
       met: metByExId.get(ex.exerciseId.toString()) ?? 4.5,
-      bodyWeightKg,
-    }),
+      sets: ex.sets,
+    })),
+    bodyWeightKg,
+    totalMinutes: totalDuration,
+  });
+  const caloriesPerExercise = exercises.map((ex, i) => ({
+    exerciseId: ex.exerciseId,
+    calories: perExercise[i],
   }));
-  const caloriesBurned = Math.round(
-    caloriesPerExercise.reduce((sum, c) => sum + c.calories, 0),
-  );
 
   const session = await WorkoutSession.create({
     userId,
