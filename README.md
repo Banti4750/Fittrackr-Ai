@@ -8,7 +8,7 @@ An AI-powered fitness tracking app. Log workouts, track personal records, see pr
 
 ```
 /fittrackr-backend     Node.js + Express + MongoDB + Mongoose + JWT
-/fittrackr-app         Expo (React Native) + TypeScript + Zustand + React Query
+/fittrackr-app         Expo (React Native) + TypeScript 
 ```
 
 ## Features
