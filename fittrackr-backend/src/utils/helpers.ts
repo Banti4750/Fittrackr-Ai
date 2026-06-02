@@ -10,6 +10,7 @@ export function slugify(input: string): string {
 }
 
 export function calcVolume(exercises: IWorkoutExercise[]): number {
+
   let total = 0;
   for (const ex of exercises) {
     for (const s of ex.sets) {
