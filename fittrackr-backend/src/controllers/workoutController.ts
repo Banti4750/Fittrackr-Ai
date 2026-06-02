@@ -40,7 +40,8 @@ const createSchema = z.object({
 });
 
 export const create = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const data = createSchema.parse(req.body);
+  try {
+    const data = createSchema.parse(req.body);
   const userId = req.userId!;
 
   const exercises: IWorkoutExercise[] = data.exercises.map((e) => ({
@@ -119,6 +120,12 @@ export const create = asyncHandler(async (req: AuthRequest, res: Response) => {
   await updateStreakOnWorkout(userId, session.date);
 
   res.status(201).json({ session });
+  } catch (error) {
+    res.status(500).json({
+      "message":"server failed"
+    })
+  }
+
 });
 
 export const list = asyncHandler(async (req: AuthRequest, res: Response) => {
