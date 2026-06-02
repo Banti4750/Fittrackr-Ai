@@ -7,7 +7,7 @@ An AI-powered fitness tracking app. Log workouts, track personal records, see pr
 🌐 Download App: https://expo.dev/artifacts/eas/i4Bhr3tCHKLuVbqnxHYXWL.apk
 
 ```
-/fittrackr-backend     Node.js + Express + MongoDB + Mongoose + JWT
+/fittrackr-backend     Node.js + Express + MongoDB + Mongoose
 /fittrackr-app         Expo (React Native) + TypeScript 
 ```
 
