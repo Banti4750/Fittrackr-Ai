@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import { WorkoutSession } from '../models/WorkoutSession';
 import { Exercise } from '../models/Exercise';
 import { AuthRequest } from '../middleware/auth';
-import { bestSetValue, startOfDay } from '../utils/helpers';
+import { bestSetWeight, startOfDay } from '../utils/helpers';
 
 function rangeDays(range?: string): number {
   if (!range) return 30;
@@ -66,7 +66,7 @@ export const personalBests = asyncHandler(async (req: AuthRequest, res: Response
   for (const s of sessions) {
     for (const ex of s.exercises) {
       for (const set of ex.sets) {
-        const val = bestSetValue(set);
+        const val = bestSetWeight(set);
         const existing = map.get(ex.exerciseId.toString());
         if (!existing || val > existing.value) {
           map.set(ex.exerciseId.toString(), {

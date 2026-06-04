@@ -139,3 +139,8 @@ export function daysBetween(a: Date, b: Date): number {
 export function bestSetValue(s: ISet): number {
   return (s.weight ?? 0) * (s.reps ?? 0);
 }
+
+// PR metric: heaviest weight lifted in a single set, regardless of reps.
+export function bestSetWeight(s: ISet): number {
+  return s.weight ?? 0;
+}

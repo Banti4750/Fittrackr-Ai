@@ -13,6 +13,7 @@ import {
   calcSessionCalories,
   metForCategory,
   bestSetValue,
+  bestSetWeight,
   FALLBACK_BODYWEIGHT_KG,
 } from '../utils/helpers';
 import { updateStreakOnWorkout } from '../services/streakService';
@@ -50,7 +51,7 @@ export const create = asyncHandler(async (req: AuthRequest, res: Response) => {
     personalBest: false,
   }));
 
-  // Detect PRs by comparing with the user's historical max per exercise (weight × reps).
+  // Detect PRs by comparing with the user's historical max weight per exercise.
   for (const ex of exercises) {
     const prior = await WorkoutSession.find({ userId, 'exercises.exerciseId': ex.exerciseId })
       .select('exercises')
@@ -59,12 +60,12 @@ export const create = asyncHandler(async (req: AuthRequest, res: Response) => {
     for (const p of prior) {
       for (const pe of p.exercises) {
         if (pe.exerciseId.toString() !== ex.exerciseId.toString()) continue;
-        for (const ps of pe.sets) priorMax = Math.max(priorMax, bestSetValue(ps));
+        for (const ps of pe.sets) priorMax = Math.max(priorMax, bestSetWeight(ps));
       }
     }
     let isPR = false;
     for (const s of ex.sets) {
-      const val = bestSetValue(s);
+      const val = bestSetWeight(s);
       if (val > priorMax) {
         s.isPersonalBest = true;
         priorMax = val;
@@ -200,7 +201,7 @@ export const lastPerformed = asyncHandler(async (req: AuthRequest, res: Response
     let best: any = undefined;
     let bestVal = -1;
     for (const s of r.sets ?? []) {
-      const v = bestSetValue(s);
+      const v = bestSetWeight(s);
       if (v > bestVal) {
         bestVal = v;
         best = s;
