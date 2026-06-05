@@ -28,7 +28,7 @@ An AI-powered fitness tracking app. Log workouts, track personal records, see pr
 - Body stats (weight, body fat, measurements, BMI) with progress photos and side-by-side comparison
 - Light / dark mode (system-following)
 - Cloudinary image uploads
-- Expo push notifications
+
 
 ## Prerequisites
 
