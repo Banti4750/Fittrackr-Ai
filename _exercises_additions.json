@@ -1,0 +1,75 @@
+[
+  {
+    "id": "reverse_wrist_curl",
+    "name": "Reverse Wrist Curl",
+    "force": "pull",
+    "level": "beginner",
+    "mechanic": "isolation",
+    "equipment": "barbell",
+    "primaryMuscles": ["forearms"],
+    "secondaryMuscles": ["wrist extensors"],
+    "instructions": [
+      "Sit on a bench holding a barbell with an overhand grip, forearms resting on your thighs and wrists hanging over the knees.",
+      "Slowly curl the bar upward by extending your wrists, keeping forearms stationary.",
+      "Pause briefly at the top of the movement, then slowly lower to the start position.",
+      "Perform controlled repetitions, avoiding momentum."
+    ],
+    "images": ["Reverse Wrist Curl/0.jpg"],
+    "category": "strength"
+  },
+  {
+    "id": "standing_cable_hip_adduction",
+    "name": "Standing Cable Hip Adduction",
+    "force": "pull",
+    "level": "beginner",
+    "mechanic": "isolation",
+    "equipment": "cable",
+    "primaryMuscles": ["adductors"],
+    "secondaryMuscles": ["hip flexors"],
+    "instructions": [
+      "Attach an ankle cuff to a low cable and secure it around the outside ankle, standing perpendicular to the machine.",
+      "Keep the support leg slightly bent and the working leg straight, then pull the cable across your body toward the midline by squeezing the inner thigh.",
+      "Control the return to the start position without letting the weight pull your leg back abruptly.",
+      "Repeat for the desired number of reps, then switch sides."
+    ],
+    "images": ["Standing Cable Hip Adduction/0.jpg"],
+    "category": "strength"
+  },
+  {
+    "id": "standing_cable_hip_abduction",
+    "name": "Standing Cable Hip Abduction",
+    "force": "pull",
+    "level": "beginner",
+    "mechanic": "isolation",
+    "equipment": "cable",
+    "primaryMuscles": ["abductors"],
+    "secondaryMuscles": ["glutes"],
+    "instructions": [
+      "Attach an ankle cuff to a low cable and secure it around the inside ankle, standing next to the machine.",
+      "Keep the support leg slightly bent and the working leg straight, then move the working leg away from the midline by contracting the outer hip.",
+      "Hold briefly at the top, then return the leg under control to the start position.",
+      "Repeat for reps, then switch sides."
+    ],
+    "images": ["Standing Cable Hip Abduction/0.jpg"],
+    "category": "strength"
+  },
+  {
+    "id": "straight_arm_dumbbell_pullover",
+    "name": "Straight-Arm Dumbbell Pullover",
+    "force": "pull",
+    "level": "intermediate",
+    "mechanic": "compound",
+    "equipment": "dumbbell",
+    "primaryMuscles": ["lats"],
+    "secondaryMuscles": ["chest","triceps"],
+    "instructions": [
+      "Lie perpendicular on a bench so only your upper back and shoulders contact the bench, feet flat on the floor.",
+      "Hold a dumbbell with both hands over your chest, arms nearly straight with a slight bend in the elbows.",
+      "Keeping arms straight, lower the dumbbell in an arc behind your head until you feel a stretch in the lats.",
+      "Pull the weight back over your chest using your lats, breathing out as you return to the start.",
+      "Use controlled tempo; avoid dropping the weight quickly."
+    ],
+    "images": ["Straight-Arm Dumbbell Pullover/0.jpg"],
+    "category": "strength"
+  }
+]

@@ -1529,6 +1529,87 @@ export const seedExercises: SeedExercise[] = [
     equipment: ['bodyweight', 'mat'],
     caloriesPerMinute: 5,
   }),
+  // Additional exercises: forearm, adductor, abductor, pullover
+  ex({
+    name: 'Reverse Wrist Curl',
+    muscleGroup: { primary: 'forearms', secondary: ['wrist extensors'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Forearm isolation focusing on the wrist extensors.',
+    instructions: [
+      'Sit with forearms resting on your thighs and wrists hanging over the knees, holding a barbell with an overhand grip.',
+      'Curl the bar upward by extending at the wrists while keeping the forearms stationary.',
+      'Pause briefly at the top, then lower under control.',
+      'Perform controlled reps without using momentum.'
+    ],
+    tips: ['Use a light-moderate load', 'Control the eccentric for best results'],
+    equipment: ['barbell', 'bench'],
+    caloriesPerMinute: 4,
+  }),
+  ex({
+    name: 'Standing Cable Hip Adduction',
+    muscleGroup: { primary: 'adductors', secondary: ['hip flexors'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Cable-based isolation to strengthen the inner thigh (adductors).',
+    instructions: [
+      'Attach an ankle cuff to a low cable and secure it to the outside ankle, standing perpendicular to the machine.',
+      'Keep the support leg slightly bent and the working leg straight, then pull the cable across the body toward the midline by squeezing the inner thigh.',
+      'Control the return to the start position.',
+      'Repeat for desired reps and switch sides.'
+    ],
+    tips: ['Start light to learn the movement', 'Pause briefly at peak contraction'],
+    equipment: ['cable machine', 'ankle cuff'],
+    caloriesPerMinute: 4,
+  }),
+  ex({
+    name: 'Standing Cable Hip Abduction',
+    muscleGroup: { primary: 'abductors', secondary: ['glutes'] },
+    category: 'strength',
+    difficulty: 'beginner',
+    description: 'Cable-based isolation to strengthen the outer hip (abductors).',
+    instructions: [
+      'Attach an ankle cuff to a low cable and secure it to the inside ankle, standing next to the machine.',
+      'Keep the support leg slightly bent and the working leg straight, then move the working leg away from the midline by contracting the outer hip.',
+      'Hold briefly at the top, then return under control.',
+      'Repeat for reps and switch sides.'
+    ],
+    tips: ['Control the descent', 'Perform higher reps for endurance'],
+    equipment: ['cable machine', 'ankle cuff'],
+    caloriesPerMinute: 4,
+  }),
+  ex({
+    name: 'Straight-Arm Dumbbell Pullover',
+    muscleGroup: { primary: 'back', secondary: ['chest', 'triceps'] },
+    category: 'strength',
+    difficulty: 'intermediate',
+    description: 'Pullover variant that emphasizes the lats while also stretching the chest.',
+    instructions: [
+      'Lie perpendicular on a bench so only your upper back and shoulders contact the bench, feet flat on the floor.',
+      'Hold a dumbbell with both hands over your chest, arms nearly straight with a slight bend in the elbows.',
+      'Keeping the arms straight, lower the dumbbell in an arc behind your head until you feel a stretch in the lats.',
+      'Pull the weight back over your chest using your lats, breathing out as you return to the start.'
+    ],
+    tips: ['Use a moderate load and controlled tempo', 'Avoid excessive bend in the elbows'],
+    equipment: ['dumbbell', 'bench'],
+    caloriesPerMinute: 6,
+  }),
+  ex({
+    name: 'Rope Pullover',
+    muscleGroup: { primary: 'back', secondary: ['lats', 'triceps'] },
+    category: 'strength',
+    difficulty: 'intermediate',
+    description: 'Cable rope pullover that targets the lats with a controlled pulling motion.',
+    instructions: [
+      'Attach a rope to a high pulley and stand facing the machine.',
+      'Grab the rope ends with a neutral grip and step back slightly, keeping a soft bend in your elbows.',
+      'Pull the rope down and back in a sweeping arc until the hands reach your thighs.',
+      'Slowly return to the start position with tension in the lats.',
+    ],
+    tips: ['Keep elbows from flaring out', 'Maintain a controlled eccentric'],
+    equipment: ['cable machine', 'rope attachment'],
+    caloriesPerMinute: 6,
+  }),
 ];
 
 // Real exercise demonstration images from the open-source yuhonas/free-exercise-db
@@ -1631,6 +1712,12 @@ const SLUG_TO_REPO_ID: Record<string, string> = {
   'backpack-goblet-squat': 'Goblet_Squat',
   'superman': 'Superman',
   'bird-dog': 'Glute_Kickback',
+  // added mappings for new seeded exercises
+  'reverse-wrist-curl': 'Wrist_Roller',
+  'standing-cable-hip-adduction': 'Cable_Hip_Adduction',
+  'standing-cable-hip-abduction': 'Cable_Hip_Abduction',
+  'straight-arm-dumbbell-pullover': 'Straight_Arm_Dumbbell_Pullover',
+  'rope-pullover': 'Straight_Arm_Dumbbell_Pullover',
 };
 
 // Anything not in the slug map (e.g. burpees, wall ball, pigeon stretch) falls
