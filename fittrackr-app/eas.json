@@ -11,7 +11,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://fittrackr-ai.onrender.com/api"
+        "EXPO_PUBLIC_API_URL": "https://fit.bantidev.qzz.io/api"
       }
     },
     "preview": {
@@ -24,7 +24,7 @@
         "simulator": false
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://fittrackr-ai.onrender.com/api"
+        "EXPO_PUBLIC_API_URL": "https://fit.bantidev.qzz.io/api"
       }
     },
     "production": {
@@ -34,7 +34,7 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://fittrackr-ai.onrender.com/api"
+        "EXPO_PUBLIC_API_URL": "https://fit.bantidev.qzz.io/api"
       }
     }
   },

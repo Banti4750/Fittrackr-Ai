@@ -47,7 +47,7 @@
     },
     "extra": {
       "router": {},
-      "apiUrl": "https://fittrackr-ai.onrender.com/api",
+      "apiUrl": "https://fit.bantidev.qzz.io/api",
       "eas": {
         "projectId": "c4705909-e5c0-4d0c-8e80-f7017321bccf"
       }
