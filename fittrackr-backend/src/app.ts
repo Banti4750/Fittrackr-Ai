@@ -38,7 +38,7 @@ export function createApp(): Application {
     })
   );
 
-  app.get('/health', (_req, res) => res.json({ "message":"ok" }));
+  app.get('/health', (_req, res) => res.json({ "message":"backend is live" }));
 
   app.use('/api/auth', authRoutes);
   app.use('/api/exercises', exerciseRoutes);
