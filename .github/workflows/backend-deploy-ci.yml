@@ -1,0 +1,33 @@
+name: Backend Deploy CI
+
+# Deploys the backend to the OCI instance via SSH on pushes to main.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "fittrackr-backend/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.OCI_SSH_KEY }}
+
+      - name: Deploy to OCI instance
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} '
+            cd "$HOME/project/Fittrackr Ai/fittrackr-backend" &&
+            git pull --ff-only &&
+            npm install &&
+            npm run build &&
+            (pm2 restart server || pm2 start dist/server.js --name server) &&
+            pm2 save
+          '
