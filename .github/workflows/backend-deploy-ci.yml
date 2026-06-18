@@ -24,6 +24,8 @@ jobs:
       - name: Deploy to OCI instance
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} '
+            export NVM_DIR="$HOME/.nvm";
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh";
             cd "$HOME/project/Fittrackr-Ai/fittrackr-backend" &&
             git pull --ff-only &&
             npm install &&
